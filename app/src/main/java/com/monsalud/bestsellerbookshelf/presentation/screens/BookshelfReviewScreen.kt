@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BookReviewScreen(isbn: Int) {
+fun BookshelfReviewScreen(isbn: Int) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -36,5 +36,5 @@ fun BookReviewScreen(isbn: Int) {
 @Composable
 @Preview
 fun BookReviewScreenPreview() {
-    BookReviewScreen(isbn = 12345)
+    BookshelfReviewScreen(isbn = 12345)
 }
