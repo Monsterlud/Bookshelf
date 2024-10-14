@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.monsalud.bestsellerbookshelf"
+    namespace = "com.monsalud.bookshelf"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.monsalud.bestsellerbookshelf"
+        applicationId = "com.monsalud.bookshelf"
         minSdk = 23
         targetSdk = 34
         versionCode = 1
@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.google.fonts)
+    implementation(libs.material.icons.extended)
     implementation(libs.coil)
     implementation(libs.coil.compose)
     implementation(libs.androidx.material3)
