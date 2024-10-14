@@ -274,4 +274,3 @@ fun BookshelfTheme(
     content = content
   )
 }
-

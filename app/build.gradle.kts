@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     // Kotlin
+    implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
 
     // Google
