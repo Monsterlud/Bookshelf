@@ -11,14 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.monsalud.bestsellerbookshelf.ui.theme.BestSellerBookshelfTheme
+import com.monsalud.bestsellerbookshelf.ui.theme.BookshelfTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BestSellerBookshelfTheme {
+            BookshelfTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Android",
@@ -41,7 +41,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    BestSellerBookshelfTheme {
+    BookshelfTheme {
         Greeting("Android")
     }
 }
