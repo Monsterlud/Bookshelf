@@ -106,7 +106,7 @@ fun NavDrawer(
                     )
                 )
                 Text(
-                    text = "the New York Times' best sellers lists",
+                    text = "New York Times best selling books",
                     fontSize = 14.sp,
                     modifier = Modifier.padding(
                         start = 24.dp, end = 24.dp

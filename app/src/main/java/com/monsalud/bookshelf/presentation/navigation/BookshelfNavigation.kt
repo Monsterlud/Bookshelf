@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookListScreen(
-    val urlEndpoint: String = "https://api.nytimes.com/svc/books/v3/lists/full-overview.json",
+    val urlEndpoint: String = "lists/full-overview.json",
 )
 
 @Serializable

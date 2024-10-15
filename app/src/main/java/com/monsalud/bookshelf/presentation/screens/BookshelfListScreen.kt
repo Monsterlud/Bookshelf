@@ -9,16 +9,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.monsalud.bookshelf.presentation.BookshelfViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BookshelfListScreen(
     urlEndpoint: String,
     onClick: (Int) -> Unit
 ) {
+    val viewModel: BookshelfViewModel = koinViewModel()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAllBooks()
+    }
 
     Box(
         modifier = Modifier
@@ -35,8 +43,10 @@ fun BookshelfListScreen(
             )
             Text(
                 text = "$urlEndpoint",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(8.dp),
             )
 
         }
