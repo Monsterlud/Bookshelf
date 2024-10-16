@@ -26,6 +26,7 @@ val appModule = module {
     single { LocalDataSourceImpl() } bind LocalDataSource::class
     single { RemoteDataSourceImpl(client = get()) } bind RemoteDataSource::class
     single(qualifier = null) { moduleInstance.ktorClient() }
+    single { BookshelfDataStore(get()) }
 }
 
 class AppModule {

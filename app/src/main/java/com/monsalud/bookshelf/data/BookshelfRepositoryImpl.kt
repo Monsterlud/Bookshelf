@@ -17,4 +17,8 @@ class BookshelfRepositoryImpl(
     override suspend fun getBookReview(isbn: String): Result<String?> {
         return remoteDataSource.getBookReviewFromApi(isbn = isbn)
     }
+
+    override suspend fun getUserPreferencesFlow(): Flow<BookshelfDataStore.UserPreferences> {
+        return localDataSource.getUserPreferencesFlow()
+    }
 }
