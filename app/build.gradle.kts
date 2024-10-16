@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.datastore.preferences)
 
     // Kotlin
     implementation(libs.kotlinx.serialization.core)
@@ -64,7 +65,6 @@ dependencies {
 
     // Google
     implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.google.gson)
 
     // UI
     implementation(platform(libs.androidx.compose.bom))
