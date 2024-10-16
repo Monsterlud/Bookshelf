@@ -20,7 +20,7 @@ data class BookListScreen(
 
 @Serializable
 data class BookDetailScreen(
-    val isbn: Int,
+    val isbn: String,
 )
 
 @Composable
@@ -35,10 +35,10 @@ fun BookshelfNavHost(
     ) {
         composable<BookListScreen> { entry ->
             val screen = entry.toRoute<BookListScreen>()
-            Timber.d("list name from navhost: ${screen.listName}")
+            Timber.d("listName from navhost: ${screen.listName}")
             BookshelfListScreen(
                 listName = screen.listName,
-                onClick = { isbn ->
+                onBookClick = { isbn ->
                     navController.navigate(BookDetailScreen(isbn))
                 }
             )

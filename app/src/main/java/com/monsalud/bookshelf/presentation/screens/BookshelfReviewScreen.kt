@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BookshelfReviewScreen(isbn: Int) {
+fun BookshelfReviewScreen(isbn: String) {
 
     Box(
         modifier = Modifier
@@ -40,5 +40,5 @@ fun BookshelfReviewScreen(isbn: Int) {
 @Composable
 @Preview
 fun BookReviewScreenPreview() {
-    BookshelfReviewScreen(isbn = 12345)
+    BookshelfReviewScreen(isbn = "12345")
 }

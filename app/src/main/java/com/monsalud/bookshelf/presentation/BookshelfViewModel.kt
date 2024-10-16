@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMap
@@ -42,7 +43,14 @@ class BookshelfViewModel(
 
     private fun refreshBookList(listName: String) {
         viewModelScope.launch {
-            repository.refreshBookListInDB(listName)
+            _isLoading.value = true
+            try {
+                repository.refreshBookListInDB(listName)
+            } catch (e: Exception) {
+                Timber.e(e, "Error refreshing book list")
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

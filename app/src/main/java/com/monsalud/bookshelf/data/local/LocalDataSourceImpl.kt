@@ -9,6 +9,7 @@ import com.monsalud.bookshelf.data.local.room.BookReviewDAO
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import timber.log.Timber
 
 class LocalDataSourceImpl(
@@ -19,25 +20,13 @@ class LocalDataSourceImpl(
 
     /** Book List */
 
-    override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks> {
-        //TODO: remove after debugging:
-        Timber.d("localdatasource: listName: $listName")
-        val listFlow = bookListDao.getListWithBooks("Hardcover Fiction")
-
-        Timber.d("localdatasource: listflow: $listFlow")
-        listFlow.collect {
-            Timber.d("ListName: ${it.bookList.listName}")
-            it.books.forEach { book ->
-                it.books.forEach {
-                    Timber.d("Book: ${it.title}")
-                }
+    override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks?> {
+        return bookListDao.getListWithBooks(listName)
+            .catch { e ->
+                Timber.e("Error getting list with books: ${e.message}")
+                emit(null)
             }
-        }
-        return listFlow
     }
-
-
-
 
 
     override fun getBooksForList(listName: String): Flow<List<BookEntity>> {

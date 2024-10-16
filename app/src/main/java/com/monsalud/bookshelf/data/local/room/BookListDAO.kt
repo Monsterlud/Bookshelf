@@ -23,7 +23,7 @@ interface BookListDAO {
             WHERE blt.listName = :listName
         """
     )
-    fun getListWithBooks(listName: String): Flow<ListWithBooks>
+    fun getListWithBooks(listName: String): Flow<ListWithBooks?>
 
     @Query("SELECT * FROM books_table WHERE listName = :listName")
     fun getBooksForList(listName: String): Flow<List<BookEntity>>

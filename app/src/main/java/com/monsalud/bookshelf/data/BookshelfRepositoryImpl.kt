@@ -2,7 +2,6 @@ package com.monsalud.bookshelf.data
 
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
-import com.monsalud.bookshelf.data.local.room.BookshelfDatabase
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
 import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDTO
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookEntity
@@ -11,7 +10,6 @@ import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
 class BookshelfRepositoryImpl(
@@ -49,7 +47,7 @@ class BookshelfRepositoryImpl(
         }
     }
 
-    override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks> {
+    override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks?> {
         return localDataSource.getListWithBooks(listName)
     }
 

@@ -10,7 +10,7 @@ interface LocalDataSource {
 
     /** Book List */
 
-    suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks>
+    suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks?>
 
     fun getBooksForList(listName: String) : Flow<List<BookEntity>>
 

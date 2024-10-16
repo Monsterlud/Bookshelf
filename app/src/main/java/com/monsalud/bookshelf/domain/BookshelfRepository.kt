@@ -9,7 +9,7 @@ interface BookshelfRepository {
 
     suspend fun refreshBookListInDB(listName: String)
 
-    suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks>
+    suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks?>
 
     suspend fun getBookReview(isbn: String) : Flow<BookReviewEntity>
 
