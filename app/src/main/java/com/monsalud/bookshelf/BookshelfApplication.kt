@@ -1,9 +1,11 @@
 package com.monsalud.bookshelf
 
 import android.app.Application
+import com.monsalud.bookshelf.data.local.room.BookshelfDatabase
 import com.monsalud.bookshelf.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.mp.KoinPlatform.getKoin
 import timber.log.Timber
 
 class BookshelfApplication : Application() {

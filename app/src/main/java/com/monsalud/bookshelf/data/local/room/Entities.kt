@@ -1,118 +1,79 @@
 package com.monsalud.bookshelf.data.local.room
 
+import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
-@Entity(tableName = "all_lists")
-data class AllListEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val status: String,
-    val copyright: String,
-    val num_results: Int
-)
+/** Database Entities for Books by List */
 
-@Entity(tableName = "all_list_results")
-data class AllListResultEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val bestsellers_date: String,
-    val published_date: String,
-    val allListId: Int, // Foreign key to link with AllListEntity
-)
-
-@Entity(tableName = "all_list_lists")
-data class AllListListEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val list_id: Int,
-    val list_name: String,
-    val display_name: String,
+@Entity(tableName = "book_list_table")
+data class BookListEntity(
+    @PrimaryKey val listName: String,
+    val bestsellersDate: String,
+    val publishedDate: String,
+    val displayName: String,
+    val normalListEndsAt: Int,
     val updated: String,
-    val list_image: String,
-    val allListResultId: Int, // Foreign key to link with AllListResultEntity
 )
 
-@Entity(tableName = "all_books")
-data class AllListBookEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val age_group: String,
-    val author: String,
-    val contributer: String,
-    val contributor_note: String,
-    val created_date: String,
-    val description: String,
-    val price: Int,
-    val primary_isbn13: String,
-    val primary_isbn10: String,
-    val publisher: String,
+@Entity(
+    tableName = "books_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = BookListEntity::class,
+            parentColumns = ["listName"],
+            childColumns = ["listName"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index("listName")]
+)
+data class BookEntity(
+    @PrimaryKey val primaryIsbn13: String,
+    val listName: String, // This is a foreign key to BookListEntity
     val rank: Int,
-    val title: String,
-    val updated_date: String,
-    val allListListId: Int, // Foreign key to link with AllListListEntity
-)
-
-
-@Entity(tableName = "single_lists")
-data class SingleListEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val status: String,
-    val copyright: String,
-    val num_results: Int,
-    val last_modified: String
-)
-
-@Entity(tableName = "single_list_results")
-data class SingleListResultEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val list_name: String,
-    val bestsellers_date: String,
-    val published_date: String,
-    val display_name: String,
-    val normal_list_ends_at: Int,
-    val updated: String,
-    val singleListId: Int, // Foreign key to link with SingleListEntity
-)
-
-@Entity(tableName = "single_list_books")
-data class SingleListBookEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val rank: Int,
-    val rank_last_week: Int,
-    val weeks_on_list: Int,
+    val rankLastWeek: Int,
+    val weeksOnList: Int,
     val asterisk: Int,
     val dagger: Int,
-    val primary_isbn10: String,
-    val primary_isbn13: String,
+    val primaryIsbn10: String,
     val publisher: String,
     val description: String,
     val price: Int,
     val title: String,
     val author: String,
     val contributor: String,
-    val contributor_note: String,
-    val book_image: String,
-    val amazon_product_url: String,
-    val age_group: String,
-    val book_review_link: String,
-    val first_chapter_link: String,
-    val singleListResultId: Int, // Foreign key to link with SingleListResultEntity
+    val contributorNote: String,
+    val bookImage: String,
+    val amazonProductUrl: String,
+    val ageGroup: String,
+    val bookReviewLink: String,
+    val firstChapterLink: String,
+    val sundayReviewLink: String,
+    val articleChapterLink: String,
 )
 
-@Entity(tableName = "isbns")
-data class IsbnEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val isbn10: String,
-    val isbn13: String,
-    val singleListBookId: Int // Foreign key to link with SingleListBookEntity
+data class ListWithBooks(
+    @Embedded val bookList: BookListEntity,
+    @Relation(
+        parentColumn = "listName",
+        entityColumn = "listName"
+    )
+    val books: List<BookEntity>
 )
 
-@Entity(tableName = "book_reviews")
+/** Database Entities for Book Reviews */
+
+@Entity(tableName = "book_reviews_table")
 data class BookReviewEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey val bookIsbn13: String,
     val url: String,
-    val publication_dt: String,
+    val publicationDt: String,
     val byline: String,
-    val book_title: String,
-    val book_author: String,
+    val bookTitle: String,
+    val bookAuthor: String,
     val summary: String,
-    val isbn13: String // Store as comma-separated string
 )
-

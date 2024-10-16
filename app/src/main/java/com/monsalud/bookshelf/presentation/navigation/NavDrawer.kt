@@ -4,8 +4,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.filled.Balance
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Draw
+import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.HistoryEdu
+import androidx.compose.material.icons.filled.Museum
+import androidx.compose.material.icons.filled.Science
+import androidx.compose.material.icons.filled.SportsFootball
+import androidx.compose.material.icons.filled.TravelExplore
+import androidx.compose.material.icons.outlined.Balance
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.Draw
+import androidx.compose.material.icons.outlined.Fastfood
+import androidx.compose.material.icons.outlined.HistoryEdu
+import androidx.compose.material.icons.outlined.Museum
+import androidx.compose.material.icons.outlined.Science
+import androidx.compose.material.icons.outlined.SportsFootball
+import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
@@ -37,63 +53,6 @@ fun NavDrawer(
         mutableIntStateOf(0)
     }
 
-    val items = listOf(
-        NavigationItem(
-            title = "Complete Best Seller List",
-            urlEndpoint = "Complete Best Seller List",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Fiction",
-            urlEndpoint = "Fiction",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Culture",
-            urlEndpoint = "Culture",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Food and Diet",
-            urlEndpoint = "Food and Diet",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Graphic Books and Manga",
-            urlEndpoint = "Graphic Books and Manga",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Politics and American History",
-            urlEndpoint = "Politics and American History",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Science",
-            urlEndpoint = "Science",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Sports and Fitness",
-            urlEndpoint = "Sports and Fitness",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Travel",
-            urlEndpoint = "Travel",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-    )
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -115,12 +74,12 @@ fun NavDrawer(
                 Spacer(modifier = Modifier.height(12.dp))
                 Divider()
                 Spacer(modifier = Modifier.height(24.dp))
-                items.forEachIndexed { index, item ->
+                navigationItems.forEachIndexed { index, item ->
                     NavigationDrawerItem(
                         label = { Text(text = item.title) },
                         selected = index == selectedItemIndex,
                         onClick = {
-                            val screen = BookListScreen(item.urlEndpoint)
+                            val screen = BookListScreen(item.listName)
                             navController.navigate(screen)
                             selectedItemIndex = index
                             scope.launch {

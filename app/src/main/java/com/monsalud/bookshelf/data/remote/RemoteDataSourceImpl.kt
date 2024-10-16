@@ -16,22 +16,7 @@ class RemoteDataSourceImpl(
     private val client: HttpClient
 ) : RemoteDataSource {
 
-    override suspend fun getAllBookListFromApi(): Result<String?> {
-        return try {
-            val allBookList = client.get<String>("${BASE_URL}/lists/full-overview.json") {
-                contentType(Json)
-                parameter("api-key", NetworkConstants.API_KEY)
-            }
-            Result.success(allBookList)
-
-        } catch (e: IOException) {
-            Result.failure(DataError.Network(e))
-        } catch (e: Exception) {
-            Result.failure(DataError.Unknown(e))
-        }
-    }
-
-    override suspend fun getSpecificBookListFromApi(list: String): Result<String?> {
+    override suspend fun getBooksInListFromApi(list: String): Result<String?> {
         return try {
             val specificBookList =
                 client.get<String>("${BASE_URL}/lists/${list}.json") {

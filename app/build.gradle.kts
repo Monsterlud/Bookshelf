@@ -77,6 +77,11 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.material3)
 
+    // Moshi
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.codegen)
+
     // Navigation
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.navigation.compose)

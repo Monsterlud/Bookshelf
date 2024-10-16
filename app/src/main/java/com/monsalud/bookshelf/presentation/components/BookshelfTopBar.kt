@@ -27,7 +27,6 @@ fun BookshelfTopBar(
         title = { Text(text = "Bookshelf") },
         navigationIcon = {
             IconButton(onClick = {
-                Timber.d("hamburger menu clicked")
                 onMenuClick()
             }) {
                 Icon(
