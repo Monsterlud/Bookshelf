@@ -48,7 +48,7 @@ class BookshelfViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                repository.refreshBookListInDB(listName)
+                repository.refreshBookListInDBFromAPI(listName)
             } catch (e: Exception) {
                 Timber.e(e, "Error refreshing book list")
             } finally {
@@ -63,14 +63,13 @@ class BookshelfViewModel(
             _bookReviewState.value = BookReviewState.Loading
             _isLoadingReview.value = true
             try {
-                val review = repository.getBookReviewFromApiAndSaveInDB(isbn13).first()
-                Timber.d("Fetched book review: $review")
-                _bookReviewState.value =
-                    if (review != null) {
+                repository.getBookReview(isbn13).collect { review ->
+                    _bookReviewState.value = if (review!= null) {
                         BookReviewState.Success(review)
                     } else {
                         BookReviewState.NoReview
                     }
+                }
             } catch (e: Exception) {
                 Timber.e(e, "Error fetching book review")
                 _bookReviewState.value =
@@ -80,7 +79,6 @@ class BookshelfViewModel(
             }
         }
     }
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val bookListFlow: StateFlow<ListWithBooks?> = _listName
@@ -93,25 +91,6 @@ class BookshelfViewModel(
             started = SharingStarted.WhileSubscribed(10_000),
             initialValue = null
         )
-
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    val bookReviewFlow: StateFlow<BookReviewEntity?> = _CurrentBooksbn13
-//        .filterNotNull()
-//        .flatMapLatest { isbn ->
-//            _isLoadingReview.value = true
-//            repository.getBookReviewFromApiAndSaveInDB(isbn)
-//                .onEach { _isLoadingReview.value = false }
-//                .catch {
-//                    Timber.e(it, "Error getting book review")
-//                    _isLoadingReview.value = false
-//                    emit(null)
-//                }
-//        }.stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(10_000),
-//            initialValue = null
-//        )
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val userPreferencesFlow: StateFlow<BookshelfDataStore.UserPreferences> = flow {

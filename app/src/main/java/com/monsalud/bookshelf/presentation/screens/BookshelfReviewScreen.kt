@@ -53,7 +53,6 @@ fun BookshelfReviewScreen(
     val uriHandler = LocalUriHandler.current
 
     val bookReviewState by viewModel.bookReviewState.collectAsStateWithLifecycle()
-    val isLoadingReview by viewModel.isLoadingReview.collectAsStateWithLifecycle()
 
     LaunchedEffect(isbn13) {
         viewModel.fetchBookReview(isbn13)

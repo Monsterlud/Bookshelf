@@ -77,4 +77,5 @@ data class BookReviewEntity(
     val bookTitle: String,
     val bookAuthor: String,
     val summary: String,
+    val timestamp: Long = System.currentTimeMillis(),
 )

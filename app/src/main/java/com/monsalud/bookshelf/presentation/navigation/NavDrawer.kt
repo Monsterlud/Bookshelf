@@ -3,8 +3,8 @@ package com.monsalud.bookshelf.presentation.navigation
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -53,7 +53,7 @@ fun NavDrawer(
                     )
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                Divider()
+                HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
                 navigationItems.forEachIndexed { index, item ->
                     NavigationDrawerItem(

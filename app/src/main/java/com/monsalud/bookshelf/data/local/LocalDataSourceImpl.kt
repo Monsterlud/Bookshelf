@@ -27,10 +27,6 @@ class LocalDataSourceImpl(
             }
     }
 
-    override fun getBooksForList(listName: String): Flow<List<BookEntity>> {
-        return bookListDao.getBooksForList(listName)
-    }
-
     override suspend fun insertListWithBooks(listWithBooks: ListWithBooks) {
         bookListDao.insertListWithBooks(listWithBooks)
     }
@@ -39,23 +35,12 @@ class LocalDataSourceImpl(
         bookListDao.deleteListWithBooks(listName)
     }
 
-    override suspend fun insertBooks(books: List<BookEntity>) {
-        bookListDao.insertBooks(books)
-    }
-
-    override suspend fun deleteBooksForList(isbn13: String) {
-        bookListDao.deleteBooksForList(isbn13)
-    }
-
-    override fun getAllBooks(): Flow<List<BookEntity>> {
-        return bookListDao.getAllBooks()
-    }
-
 
     /** Book Review */
 
     override suspend fun insertBookReview(bookReview: BookReviewEntity) {
-        bookReviewDAO.insertBookReview(bookReview)
+        val reviewWithTimestamp = bookReview.copy(timestamp = System.currentTimeMillis())
+        bookReviewDAO.insertBookReview(reviewWithTimestamp)
     }
 
     override suspend fun deleteBookReview(isbn13: String) {

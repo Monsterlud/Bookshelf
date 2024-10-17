@@ -29,7 +29,6 @@ interface LocalDataSource {
      */
     suspend fun deleteListWithBooks(listName: String)
 
-
     /** Book Review Operations */
 
     /**

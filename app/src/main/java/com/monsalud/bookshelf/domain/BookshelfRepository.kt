@@ -14,7 +14,7 @@ interface BookshelfRepository {
      *
      * @param listName The name of the list to refresh.
      */
-    suspend fun refreshBookListInDB(listName: String)
+    suspend fun refreshBookListInDBFromAPI(listName: String)
 
     /**
      * Retrieves a list with its associated books, either from the local database or remote API.
@@ -24,16 +24,6 @@ interface BookshelfRepository {
      */
     suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks?>
 
-
-    /** Book Review Operations */
-
-    /**
-     * Fetches a book review from the remote API and saves it in the local database.
-     *
-     * @param isbn The ISBN of the book to get the review for.
-     * @return A Flow emitting the BookReviewEntity or null if no review is found.
-     */
-    suspend fun getBookReviewFromApiAndSaveInDB(isbn: String) : Flow<BookReviewEntity?>
 
     /**
      * Retrieves a book review, prioritizing the local database but potentially fetching from the API if not found locally.

@@ -11,16 +11,17 @@ import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class BookshelfRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
 ) : BookshelfRepository {
 
-
-    override suspend fun refreshBookListInDB(listName: String) {
+    override suspend fun refreshBookListInDBFromAPI(listName: String) {
         val result = remoteDataSource.getBooksInListFromApi(listName)
         result.onSuccess { jsonString ->
             if (jsonString != null) {
@@ -39,37 +40,18 @@ class BookshelfRepositoryImpl(
         return localDataSource.getListWithBooks(listName)
     }
 
-    override suspend fun getBookReviewFromApiAndSaveInDB(isbn: String): Flow<BookReviewEntity?> {
+    override suspend fun getBookReview(isbn13: String) : Flow<BookReviewEntity?> {
         return flow {
-            Timber.d("Fetching book review from API for ISBN: $isbn")
-            val result = remoteDataSource.getBookReviewFromApi(isbn)
-            result.onSuccess { jsonString ->
-                Timber.d("Received JSON string for ISBN: $isbn")
-                if (jsonString != null) {
-                    val bookReview = parseBookReviewJsonToBookReviewEntity(jsonString)
-                    if (bookReview != null) {
-                        Timber.d("Book review received for ISBN: $isbn")
-                        localDataSource.deleteBookReview(bookReview.bookIsbn13)
-                        localDataSource.insertBookReview(bookReview)
-                        this@flow.emit(bookReview)
-                    } else {
-                        Timber.d("No book review available for ISBN: $isbn")
-                        this@flow.emit(null)
-                    }
-                } else {
-                    Timber.d("Null JSON string received for ISBN: $isbn")
-                    this@flow.emit(null)
-                }
-            }.onFailure {
-                Timber.e(it, "Error fetching book review from API for ISBN: $isbn")
-                this@flow.emit(null)
+            Timber.d("Fetching book review from DB for ISBN: $isbn13")
+            val localBookReview = localDataSource.getBookReview(isbn13).first()
+            if (localBookReview != null && !shouldReplaceOldReview(localBookReview)) {
+                Timber.d("Using cached book review for ISBN: $isbn13")
+                emit(localBookReview)
+            } else {
+                val remoteBookReview = fetchAndSaveReview(isbn13)
+                emit(remoteBookReview)
             }
         }
-    }
-
-    override suspend fun getBookReview(isbn: String): Flow<BookReviewEntity?> {
-        Timber.d("Fetching book review from DB for ISBN: $isbn")
-        return localDataSource.getBookReview(isbn)
     }
 
     override suspend fun getUserPreferencesFlow(): Flow<BookshelfDataStore.UserPreferences> {
@@ -79,6 +61,9 @@ class BookshelfRepositoryImpl(
     override suspend fun updateHasSeenOnboardingDialog(hasSeen: Boolean) {
         localDataSource.updateHasSeenOnboardingDialog(hasSeen)
     }
+
+
+    /** Private Helper Functions */
 
     private fun parseBookListJsonToListWithBooks(jsonString: String): ListWithBooks {
         val moshi = Moshi.Builder()
@@ -115,5 +100,21 @@ class BookshelfRepositoryImpl(
             bookAuthor = bookReviewDTO.book_author,
             summary = bookReviewDTO.summary
         )
+    }
+
+    private suspend fun fetchAndSaveReview(isbn13: String) : BookReviewEntity? {
+        val result = remoteDataSource.getBookReviewFromApi(isbn13)
+        Timber.d("Fetching book review from API for ISBN: $isbn13")
+        Timber.d("API Response: ${result.getOrNull()}")
+        return result.getOrNull()?.let { jsonString ->
+            parseBookReviewJsonToBookReviewEntity(jsonString)?.also {
+                localDataSource.insertBookReview(it)
+            }
+        }
+    }
+
+    private fun shouldReplaceOldReview(review: BookReviewEntity) : Boolean {
+        val oneDayAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)
+        return review.timestamp < oneDayAgo
     }
 }
