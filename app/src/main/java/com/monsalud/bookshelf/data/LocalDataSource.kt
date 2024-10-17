@@ -30,7 +30,7 @@ interface LocalDataSource {
 
     suspend fun deleteBookReview(isbn13: String)
 
-    fun getBookReview(isbn13: String) : Flow<BookReviewEntity>
+    fun getBookReview(isbn13: String) : Flow<BookReviewEntity?>
 
     /** DataStore */
 

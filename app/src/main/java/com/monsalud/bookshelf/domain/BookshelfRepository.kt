@@ -11,7 +11,9 @@ interface BookshelfRepository {
 
     suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks?>
 
-    suspend fun getBookReview(isbn: String) : Flow<BookReviewEntity>
+    suspend fun getBookReviewFromApiAndSaveInDB(isbn: String) : Flow<BookReviewEntity?>
+
+    suspend fun getBookReview(isbn: String) : Flow<BookReviewEntity?>
 
     suspend fun getUserPreferencesFlow() : Flow<BookshelfDataStore.UserPreferences>
 

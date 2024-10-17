@@ -6,10 +6,12 @@ import com.monsalud.bookshelf.data.local.room.ListWithBooks
 import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDTO
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookEntity
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookListEntity
+import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDTO
 import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 class BookshelfRepositoryImpl(
@@ -17,22 +19,8 @@ class BookshelfRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
 ) : BookshelfRepository {
 
-    private fun parseBookListJsonToListWithBooks(jsonString: String): ListWithBooks {
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-        val adapter = moshi.adapter(BookListResponseDTO::class.java)
-        val apiResponse =
-            adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
-        val bookListEntity = apiResponse.results.toBookListEntity()
-        val bookEntities =
-            apiResponse.results.books.map { it.toBookEntity(apiResponse.results.list_name) }
-
-        return ListWithBooks(bookListEntity, bookEntities)
-    }
 
     override suspend fun refreshBookListInDB(listName: String) {
-        Timber.d("listName when refreshing book list in repository: $listName")
         val result = remoteDataSource.getBooksInListFromApi(listName)
         result.onSuccess { jsonString ->
             if (jsonString != null) {
@@ -51,7 +39,35 @@ class BookshelfRepositoryImpl(
         return localDataSource.getListWithBooks(listName)
     }
 
-    override suspend fun getBookReview(isbn: String): Flow<BookReviewEntity> {
+    override suspend fun getBookReviewFromApiAndSaveInDB(isbn: String): Flow<BookReviewEntity?> {
+        return flow {
+            Timber.d("Fetching book review from API for ISBN: $isbn")
+            val result = remoteDataSource.getBookReviewFromApi(isbn)
+            result.onSuccess { jsonString ->
+                Timber.d("Received JSON string for ISBN: $isbn")
+                if (jsonString != null) {
+                    val bookReview = parseBookReviewJsonToBookReviewEntity(jsonString)
+                    if (bookReview != null) {
+                        localDataSource.deleteBookReview(bookReview.bookIsbn13)
+                        localDataSource.insertBookReview(bookReview)
+                        this@flow.emit(bookReview)
+                    } else {
+                        Timber.d("No book review available for ISBN: $isbn")
+                        this@flow.emit(null)
+                    }
+                } else {
+                    Timber.d("Null JSON string received for ISBN: $isbn")
+                    this@flow.emit(null)
+                }
+            }.onFailure {
+                Timber.e(it, "Error fetching book review from API for ISBN: $isbn")
+                this@flow.emit(null)
+            }
+        }
+    }
+
+    override suspend fun getBookReview(isbn: String): Flow<BookReviewEntity?> {
+        Timber.d("Fetching book review from DB for ISBN: $isbn")
         return localDataSource.getBookReview(isbn)
     }
 
@@ -61,5 +77,43 @@ class BookshelfRepositoryImpl(
 
     override suspend fun updateHasSeenOnboardingDialog(hasSeen: Boolean) {
         localDataSource.updateHasSeenOnboardingDialog(hasSeen)
+    }
+
+    private fun parseBookListJsonToListWithBooks(jsonString: String): ListWithBooks {
+        val moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+        val adapter = moshi.adapter(BookListResponseDTO::class.java)
+        val apiResponse =
+            adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
+        val bookListEntity = apiResponse.results.toBookListEntity()
+        val bookEntities =
+            apiResponse.results.books.map { it.toBookEntity(apiResponse.results.list_name) }
+
+        return ListWithBooks(bookListEntity, bookEntities)
+    }
+
+    private fun parseBookReviewJsonToBookReviewEntity(jsonString: String): BookReviewEntity? {
+        val moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+        val adapter = moshi.adapter(BookReviewResponseDTO::class.java)
+        val apiResponse =
+            adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
+        if (apiResponse.results.isEmpty()) {
+            Timber.d("No results found in the API response")
+            return null
+        }
+        val bookReviewDTO = apiResponse.results.first()
+        return BookReviewEntity(
+            bookIsbn13 = bookReviewDTO.isbn13.firstOrNull() ?: "",
+            url = bookReviewDTO.url,
+            publicationDt = bookReviewDTO.publication_dt,
+            byline = bookReviewDTO.byline,
+            bookTitle = bookReviewDTO.book_title,
+            bookAuthor = bookReviewDTO.book_author,
+            summary = bookReviewDTO.summary
+        )
+
     }
 }

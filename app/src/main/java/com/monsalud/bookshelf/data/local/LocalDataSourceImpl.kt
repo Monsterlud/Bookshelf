@@ -63,9 +63,14 @@ class LocalDataSourceImpl(
         bookReviewDAO.deleteBookReview(isbn13)
     }
 
-    override fun getBookReview(isbn13: String): Flow<BookReviewEntity> {
+    override fun getBookReview(isbn13: String): Flow<BookReviewEntity?> {
         return bookReviewDAO.getBookReview(isbn13)
+            .catch {
+                Timber.e("Error getting book review: ${it.message}")
+                emit(null)
+            }
     }
+
 
     /** DataStore */
 

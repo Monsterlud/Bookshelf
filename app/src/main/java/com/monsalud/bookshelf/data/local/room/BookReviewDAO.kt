@@ -19,5 +19,5 @@ interface BookReviewDAO {
     suspend fun deleteBookReview(isbn13: String)
 
     @Query("SELECT * FROM book_reviews_table WHERE bookIsbn13 = :isbn13")
-    fun getBookReview(isbn13: String): Flow<BookReviewEntity>
+    fun getBookReview(isbn13: String): Flow<BookReviewEntity?>
 }

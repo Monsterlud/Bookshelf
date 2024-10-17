@@ -2,6 +2,7 @@ package com.monsalud.bookshelf.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,13 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.presentation.BookshelfViewModel
+import com.monsalud.bookshelf.presentation.components.BookItem
 import com.monsalud.bookshelf.presentation.components.OnboardingDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BookshelfListScreen(
     listName: String,
-    onBookClick: (String) -> Unit,
+    onBookClick: (BookEntity) -> Unit,
 ) {
     val viewModel: BookshelfViewModel = koinViewModel()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -62,17 +64,23 @@ fun BookshelfListScreen(
             Text(
                 text = listName,
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 0.dp)
+            )
+            Text(
+                text = "A New York Times Best Seller List",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 0.dp)
             )
 
             if (!isLoading && listWithBooks != null) {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize().padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     items(listWithBooks!!.books) { book ->
                         BookItem(
                             book = book,
-                            onClick = { onBookClick(book.primaryIsbn13) },
+                            onClick = { onBookClick(book) },
                         )
                     }
                 }
@@ -102,31 +110,6 @@ fun BookshelfListScreen(
         )
     }
 }
-
-@Composable
-fun BookItem(
-    book: BookEntity,
-    onClick: (String) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(book.primaryIsbn13) }
-            .padding(16.dp)
-    ) {
-        Text(
-            text = book.title,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = book.author,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-    }
-}
-
 
 @Composable
 @Preview
