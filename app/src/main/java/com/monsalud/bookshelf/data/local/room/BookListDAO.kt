@@ -80,6 +80,6 @@ interface BookListDAO {
     @Query("SELECT COUNT(*) FROM books_table WHERE listName = :listName")
     fun countBooksInList(listName: String): Int
 
-    @Query("SELECT COUNT(*) FROM book_reviews_table WHERE primaryIsbn13 = :isbn13")
+    @Query("SELECT COUNT(*) FROM book_reviews_table WHERE bookIsbn13 = :isbn13")
     fun countReviewsForBook(isbn13: String): Int
 }

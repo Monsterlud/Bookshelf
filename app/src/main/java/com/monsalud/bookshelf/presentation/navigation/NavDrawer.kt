@@ -60,7 +60,7 @@ fun NavDrawer(
                         label = { Text(text = item.title) },
                         selected = index == selectedItemIndex,
                         onClick = {
-                            val screen = BookListScreen(item.listName)
+                            val screen = Screen.BookListScreen(item.listName)
                             navController.navigate(screen)
                             selectedItemIndex = index
                             scope.launch {
