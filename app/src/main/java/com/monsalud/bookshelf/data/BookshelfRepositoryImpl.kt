@@ -48,6 +48,7 @@ class BookshelfRepositoryImpl(
                 if (jsonString != null) {
                     val bookReview = parseBookReviewJsonToBookReviewEntity(jsonString)
                     if (bookReview != null) {
+                        Timber.d("Book review received for ISBN: $isbn")
                         localDataSource.deleteBookReview(bookReview.bookIsbn13)
                         localDataSource.insertBookReview(bookReview)
                         this@flow.emit(bookReview)
@@ -114,6 +115,5 @@ class BookshelfRepositoryImpl(
             bookAuthor = bookReviewDTO.book_author,
             summary = bookReviewDTO.summary
         )
-
     }
 }

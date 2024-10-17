@@ -59,7 +59,8 @@ fun BookItem(
                 contentDescription = "Cover of ${book.title}",
                 placeholder = null,
                 error = painterResource(id = R.drawable.error_image),
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .size(120.dp)
                     .padding(end = 16.dp),
                 contentScale = ContentScale.Fit,
             )
@@ -95,8 +96,6 @@ fun BookItem(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-
-
         }
     }
 }

@@ -12,8 +12,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.monsalud.bookshelf.data.RemoteDataSource
-import com.monsalud.bookshelf.data.remote.RemoteDataSourceImpl
 import com.monsalud.bookshelf.presentation.components.BookshelfTopBar
 import com.monsalud.bookshelf.presentation.navigation.BookshelfNavHost
 import com.monsalud.bookshelf.presentation.navigation.NavDrawer

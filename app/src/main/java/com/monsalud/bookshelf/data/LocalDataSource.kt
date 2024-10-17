@@ -10,9 +10,9 @@ interface LocalDataSource {
 
     /** Book List */
 
-    suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks?>
+    suspend fun getListWithBooks(listName: String): Flow<ListWithBooks?>
 
-    fun getBooksForList(listName: String) : Flow<List<BookEntity>>
+    fun getBooksForList(listName: String): Flow<List<BookEntity>>
 
     suspend fun insertListWithBooks(listWithBooks: ListWithBooks)
 
@@ -22,7 +22,8 @@ interface LocalDataSource {
 
     suspend fun deleteBooksForList(isbn13: String)
 
-    fun getAllBooks() : Flow<List<BookEntity>>
+    fun getAllBooks(): Flow<List<BookEntity>>
+
 
     /** Book Review */
 
@@ -30,7 +31,7 @@ interface LocalDataSource {
 
     suspend fun deleteBookReview(isbn13: String)
 
-    fun getBookReview(isbn13: String) : Flow<BookReviewEntity?>
+    fun getBookReview(isbn13: String): Flow<BookReviewEntity?>
 
     /** DataStore */
 

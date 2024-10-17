@@ -89,7 +89,7 @@ fun OnboardingDialog(
                         colorFilter = ColorFilter.tint(
                             color = tintColor,
                             blendMode = BlendMode.SrcOver
-                    )
+                        )
                     )
             ) {
                 IconButton(

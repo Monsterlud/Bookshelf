@@ -1,6 +1,5 @@
 package com.monsalud.bookshelf.data.local
 
-import androidx.datastore.dataStore
 import com.monsalud.bookshelf.data.LocalDataSource
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookEntity
@@ -28,7 +27,6 @@ class LocalDataSourceImpl(
             }
     }
 
-
     override fun getBooksForList(listName: String): Flow<List<BookEntity>> {
         return bookListDao.getBooksForList(listName)
     }
@@ -52,6 +50,7 @@ class LocalDataSourceImpl(
     override fun getAllBooks(): Flow<List<BookEntity>> {
         return bookListDao.getAllBooks()
     }
+
 
     /** Book Review */
 

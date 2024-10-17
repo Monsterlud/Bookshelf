@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

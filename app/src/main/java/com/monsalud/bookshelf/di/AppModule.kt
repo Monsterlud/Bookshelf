@@ -43,7 +43,12 @@ val appModule = module {
     single { provideBookReviewDao(get()) }
 
     viewModel { BookshelfViewModel(repository = get()) }
-    single { BookshelfRepositoryImpl(localDataSource = get(), remoteDataSource = get()) } bind BookshelfRepository::class
+    single {
+        BookshelfRepositoryImpl(
+            localDataSource = get(),
+            remoteDataSource = get()
+        )
+    } bind BookshelfRepository::class
     single { LocalDataSourceImpl(get(), get(), get()) } bind LocalDataSource::class
     single { RemoteDataSourceImpl(client = get()) } bind RemoteDataSource::class
     single(qualifier = null) { moduleInstance.ktorClient() }

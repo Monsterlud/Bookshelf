@@ -4,6 +4,7 @@ import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.data.local.room.BookListEntity
 import com.squareup.moshi.JsonClass
 
+
 /** DTOs to handle Books List API data */
 
 @JsonClass(generateAdapter = true)

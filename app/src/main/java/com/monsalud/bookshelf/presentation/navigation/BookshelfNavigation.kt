@@ -11,7 +11,6 @@ import androidx.navigation.toRoute
 import com.monsalud.bookshelf.presentation.screens.BookshelfListScreen
 import com.monsalud.bookshelf.presentation.screens.BookshelfReviewScreen
 import kotlinx.serialization.Serializable
-import timber.log.Timber
 
 @Serializable
 data class BookListScreen(

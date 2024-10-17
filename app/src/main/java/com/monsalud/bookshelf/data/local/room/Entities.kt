@@ -65,6 +65,7 @@ data class ListWithBooks(
     val books: List<BookEntity>
 )
 
+
 /** Database Entities for Book Reviews */
 
 @Entity(tableName = "book_reviews_table")

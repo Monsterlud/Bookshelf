@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import timber.log.Timber
 
 @Dao
 interface BookListDAO {
@@ -52,6 +51,7 @@ interface BookListDAO {
     @Query("SELECT * FROM book_list_table")
     fun getAllBookLists(): Flow<List<BookListEntity>>
 
+
     // Books table operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: BookEntity)
@@ -71,11 +71,15 @@ interface BookListDAO {
     @Query("SELECT * FROM books_table")
     fun getAllBooks(): Flow<List<BookEntity>>
 
-    //TODO: remove these after debugging
+
+    // Debugging Tools
+
     @Query("SELECT COUNT(*) FROM book_list_table WHERE listName = :listName")
     fun checkListExists(listName: String): Int
 
     @Query("SELECT COUNT(*) FROM books_table WHERE listName = :listName")
     fun countBooksInList(listName: String): Int
 
+    @Query("SELECT COUNT(*) FROM book_reviews_table WHERE primaryIsbn13 = :isbn13")
+    fun countReviewsForBook(isbn13: String): Int
 }

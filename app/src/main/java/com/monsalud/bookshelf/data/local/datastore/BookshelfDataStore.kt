@@ -26,18 +26,20 @@ class BookshelfDataStore(
     }
 
     val preferencesFlow = dataStore.data
-        .catch {exception ->
+        .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
             } else {
                 throw exception
             }
         }
-        .map {preferences ->
-            val hasSeenOnboardingDialog = preferences[PreferencesKeys.HAS_SEEN_ONBOARDING_DIALOG] ?: false
+        .map { preferences ->
+            val hasSeenOnboardingDialog =
+                preferences[PreferencesKeys.HAS_SEEN_ONBOARDING_DIALOG] ?: false
             UserPreferences(hasSeenOnboardingDialog = hasSeenOnboardingDialog)
 
         }
+
     data class UserPreferences(
         val hasSeenOnboardingDialog: Boolean
     )
