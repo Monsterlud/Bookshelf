@@ -47,7 +47,7 @@ fun BookshelfReviewScreen(
     publisher: String,
     bookImage: String,
     amazonProductUrl: String,
-    bookReviewLink: String,
+    author: String,
 ) {
 
     val viewModel: BookshelfViewModel = koinViewModel()
@@ -151,7 +151,7 @@ fun BookshelfReviewScreen(
                         )
                     )
                     Text(
-                        text = review.byline,
+                        text = author,
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         modifier = Modifier.padding(
@@ -210,13 +210,12 @@ fun BookshelfReviewScreen(
                 }
             }
 
-
             Text(
                 text = "Buy this book on Amazon",
                 style = MaterialTheme.typography.bodyLarge,
                 color = if (isSystemInDarkTheme()) Color.White else Color.Blue,
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
                     .clickable {
                         uriHandler.openUri(amazonProductUrl)
                     }
@@ -236,6 +235,6 @@ fun BookReviewScreenPreview() {
         publisher = "Publisher",
         bookImage = "https://storage.googleapis.com/du-prd/books/images/9780593449592.jpg",
         amazonProductUrl = "",
-        bookReviewLink = ""
+        author = ""
     )
 }

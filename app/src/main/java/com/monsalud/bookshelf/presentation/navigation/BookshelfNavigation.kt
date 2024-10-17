@@ -27,7 +27,7 @@ data class BookDetailScreen(
     val publisher: String,
     val bookImage: String,
     val amazonProductUrl: String,
-    val bookReviewLink: String,
+    val author: String,
 )
 
 @Composable
@@ -54,7 +54,7 @@ fun BookshelfNavHost(
                             publisher = book.publisher,
                             bookImage = book.bookImage,
                             amazonProductUrl = book.amazonProductUrl,
-                            bookReviewLink = book.bookReviewLink,
+                            author = book.author,
                         )
                     )
                 }
@@ -70,7 +70,7 @@ fun BookshelfNavHost(
                 book.publisher,
                 book.bookImage,
                 book.amazonProductUrl,
-                book.bookReviewLink,
+                book.author,
             )
         }
     }
