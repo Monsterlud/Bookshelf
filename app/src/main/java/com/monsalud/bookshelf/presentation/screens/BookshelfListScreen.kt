@@ -15,7 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.presentation.BookshelfViewModel
+import com.monsalud.bookshelf.presentation.components.OnboardingDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -32,6 +35,14 @@ fun BookshelfListScreen(
 ) {
     val viewModel: BookshelfViewModel = koinViewModel()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val userPreferences by viewModel.userPreferencesFlow.collectAsStateWithLifecycle()
+    val isLoadingPreferences by viewModel.isLoadingPreferences.collectAsStateWithLifecycle()
+
+    val showOnboardingDialog by remember {
+        derivedStateOf {
+            !isLoadingPreferences && !userPreferences.hasSeenOnboardingDialog
+        }
+    }
 
     val listWithBooks by viewModel.bookListFlow.collectAsStateWithLifecycle()
 
@@ -82,6 +93,13 @@ fun BookshelfListScreen(
                     .padding(16.dp)
             )
         }
+    }
+    if (showOnboardingDialog) {
+        OnboardingDialog(
+            onDismiss = {
+                viewModel.updateHasSeenOnboardingDialog(true)
+            }
+        )
     }
 }
 

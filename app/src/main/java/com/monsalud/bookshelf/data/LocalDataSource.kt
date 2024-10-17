@@ -35,4 +35,6 @@ interface LocalDataSource {
     /** DataStore */
 
     suspend fun getUserPreferencesFlow(): Flow<BookshelfDataStore.UserPreferences>
+
+    suspend fun updateHasSeenOnboardingDialog(hasSeen: Boolean)
 }

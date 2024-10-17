@@ -78,4 +78,10 @@ class BookshelfViewModel(
                 hasSeenOnboardingDialog = true,
             )
         )
+
+    fun updateHasSeenOnboardingDialog(hasSeen: Boolean) {
+        viewModelScope.launch {
+            repository.updateHasSeenOnboardingDialog(hasSeen)
+        }
+    }
 }

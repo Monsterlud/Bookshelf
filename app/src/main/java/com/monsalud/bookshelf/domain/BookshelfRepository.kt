@@ -14,4 +14,6 @@ interface BookshelfRepository {
     suspend fun getBookReview(isbn: String) : Flow<BookReviewEntity>
 
     suspend fun getUserPreferencesFlow() : Flow<BookshelfDataStore.UserPreferences>
+
+    suspend fun updateHasSeenOnboardingDialog(hasSeen: Boolean)
 }

@@ -58,4 +58,8 @@ class BookshelfRepositoryImpl(
     override suspend fun getUserPreferencesFlow(): Flow<BookshelfDataStore.UserPreferences> {
         return localDataSource.getUserPreferencesFlow()
     }
+
+    override suspend fun updateHasSeenOnboardingDialog(hasSeen: Boolean) {
+        localDataSource.updateHasSeenOnboardingDialog(hasSeen)
+    }
 }
