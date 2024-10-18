@@ -24,10 +24,17 @@ class BookshelfRepositoryImpl(
     override suspend fun refreshBookListInDBFromAPI(listName: String) {
         val result = remoteDataSource.getBooksInListFromApi(listName)
         result.onSuccess { jsonString ->
+            Timber.d("Received JSON String: $jsonString")
             if (jsonString != null) {
-                val listWithBooks = parseBookListJsonToListWithBooks(jsonString)
-                localDataSource.deleteListWithBooks(listName)
-                localDataSource.insertListWithBooks(listWithBooks)
+                try {
+                    val listWithBooks = parseBookListJsonToListWithBooks(jsonString)
+                    Timber.d("Parsed JSON String to ListWithBooks: $listWithBooks")
+                    localDataSource.deleteListWithBooks(listName)
+                    localDataSource.insertListWithBooks(listWithBooks)
+                } catch (e: Exception) {
+                    Timber.d("Error parsing JSON String: ${e.message}")
+                    e.printStackTrace()
+                }
             }
         }
         result.onFailure {
