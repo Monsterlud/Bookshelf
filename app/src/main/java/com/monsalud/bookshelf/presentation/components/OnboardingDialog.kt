@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -100,10 +101,12 @@ fun OnboardingDialog(
                         .align(Alignment.TopEnd)
                         .padding(MaterialTheme.spacing.small)
                         .zIndex(1f)
+                        .testTag("closeButton")
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close"
+                        contentDescription = "Close",
+                        Modifier
                     )
                 }
                 Column(
