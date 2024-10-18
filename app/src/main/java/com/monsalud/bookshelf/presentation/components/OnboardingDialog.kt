@@ -35,10 +35,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.monsalud.bookshelf.R
+import com.monsalud.bookshelf.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,14 +48,14 @@ fun OnboardingDialog(
     onDismiss: () -> Unit
 ) {
     val titles = listOf(
-        "Welcome to Bookshelf!",
-        "Find Your Next Great Read!",
-        "Get the Details",
+        stringResource(id = R.string.onboarding_title_1),
+        stringResource(id = R.string.onboarding_title_2),
+        stringResource(id = R.string.onboarding_title_3),
     )
     val items = listOf(
-        "Bookshelf is your window to every current New York Times Best Sellers List!",
-        "Explore the newest and best-selling books available now in the United States.",
-        "Access to New York Times reviews and purchase links are just a click away.",
+        stringResource(id = R.string.onboarding_body_1),
+        stringResource(id = R.string.onboarding_body_2),
+        stringResource(id = R.string.onboarding_body_3),
     )
     val backgroundImage = painterResource(id = R.drawable.onboarding_image)
     val pagerState = rememberPagerState(pageCount = { items.size })
@@ -72,16 +74,16 @@ fun OnboardingDialog(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .heightIn(max = 400.dp),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(MaterialTheme.spacing.medium),
             color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 8.dp
+            tonalElevation = MaterialTheme.spacing.small
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
                         color = Color.Transparent,
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(MaterialTheme.spacing.medium)
                     )
                     .paint(
                         painter = backgroundImage,
@@ -96,7 +98,7 @@ fun OnboardingDialog(
                     onClick = onDismiss,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(8.dp)
+                        .padding(MaterialTheme.spacing.small)
                         .zIndex(1f)
                 ) {
                     Icon(
@@ -107,7 +109,7 @@ fun OnboardingDialog(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(MaterialTheme.spacing.medium)
                         .align(Alignment.TopStart),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -118,21 +120,21 @@ fun OnboardingDialog(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
+                                .padding(MaterialTheme.spacing.medium),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
                                 text = titles[page],
                                 style = MaterialTheme.typography.headlineSmall,
                                 modifier = Modifier
-                                    .padding(8.dp)
+                                    .padding(MaterialTheme.spacing.small)
                                     .align(Alignment.Start)
                             )
                             Text(
                                 text = items[page],
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier
-                                    .padding(8.dp)
+                                    .padding(MaterialTheme.spacing.small)
                                     .align(Alignment.CenterHorizontally)
                             )
                         }
@@ -150,7 +152,7 @@ fun OnboardingDialog(
                                 if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
                             Box(
                                 modifier = Modifier
-                                    .padding(8.dp)
+                                    .padding(MaterialTheme.spacing.small)
                                     .background(color, CircleShape)
                                     .size(10.dp)
                             )

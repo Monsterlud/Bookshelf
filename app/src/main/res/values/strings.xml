@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Bookshelf</string>
+
+    // Onboarding Dialog
+    <string name="onboarding_title_1">Welcome to Bookshelf!</string>
+    <string name="onboarding_title_2">Find Your Next Great Read!</string>
+    <string name="onboarding_title_3">Get the Details</string>
+
+    <string name="onboarding_body_1">Bookshelf is your window to every current New York Times Best Sellers List!</string>
+    <string name="onboarding_body_2">Explore the newest and best-selling books available now in the United States.</string>
+    <string name="onboarding_body_3">Access to New York Times reviews and purchase links are just a click away.</string>
+
+    // NavDrawer
+    <string name="app_subtitle">New York Times best selling books</string>
+
+    // Bookshelf List Screen
+    <string name="list_subtitle">A New York Times Best Seller List</string>
+    <string name="no_data_available">No Data Available</string>
+
+    // Bookshelf Detail Screen
+    <string name="initial_state">Initial State</string>
+    <string name="read_the_full_new_york_times_review">Read the full New York Times review</string>
+    <string name="no_review_available_for_this_book">No review available for this book</string>
+    <string name="buy_this_book_on_amazon">Buy this book on Amazon</string>
+
 </resources>

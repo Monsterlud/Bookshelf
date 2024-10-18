@@ -6,6 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import timber.log.Timber
 
+const val DATABASE_NAME = "bookshelf_database"
+
 @Database(
     entities = [BookListEntity::class, BookEntity::class, BookReviewEntity::class,],
     version = 1,
@@ -29,7 +31,7 @@ abstract class BookshelfDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     BookshelfDatabase::class.java,
-                    "bookshelf_database"
+                    DATABASE_NAME,
                 ).build()
                 INSTANCE = instance
                 Timber.d("Created database at: ${instance.openHelper.writableDatabase.path}")

@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +35,7 @@ import coil.request.ImageRequest
 import com.monsalud.bookshelf.R
 import com.monsalud.bookshelf.presentation.BookReviewState
 import com.monsalud.bookshelf.presentation.BookshelfViewModel
+import com.monsalud.bookshelf.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
@@ -73,20 +75,23 @@ fun BookshelfReviewScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = MaterialTheme.spacing.medium),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Rank: $rank",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                    modifier = Modifier.padding(
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
                 )
                 Text(
                     text = "Last Week's Rank: $rankLastWeek",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(end = MaterialTheme.spacing.medium)
                 )
                 Text(
                     text = "Weeks on List: $weeksOnList",
@@ -105,14 +110,14 @@ fun BookshelfReviewScreen(
                 error = painterResource(id = R.drawable.error_image),
                 modifier = Modifier
                     .size(300.dp)
-                    .padding(16.dp)
+                    .padding(MaterialTheme.spacing.medium)
                     .align(Alignment.CenterHorizontally),
                 contentScale = ContentScale.Fit,
             )
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small),
                 thickness = 2.dp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -121,10 +126,10 @@ fun BookshelfReviewScreen(
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 0.dp,
-                    bottom = 0.dp
+                    start = MaterialTheme.spacing.medium,
+                    end = MaterialTheme.spacing.medium,
+                    top = MaterialTheme.spacing.none,
+                    bottom = MaterialTheme.spacing.none
                 )
             )
             Text(
@@ -132,10 +137,10 @@ fun BookshelfReviewScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 0.dp,
-                    bottom = 0.dp
+                    start = MaterialTheme.spacing.medium,
+                    end = MaterialTheme.spacing.medium,
+                    top = MaterialTheme.spacing.none,
+                    bottom = MaterialTheme.spacing.none
                 )
             )
             Text(
@@ -143,17 +148,17 @@ fun BookshelfReviewScreen(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 8.dp,
-                    bottom = 0.dp
+                    start = MaterialTheme.spacing.medium,
+                    end = MaterialTheme.spacing.medium,
+                    top = MaterialTheme.spacing.small,
+                    bottom = MaterialTheme.spacing.none
                 )
             )
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(MaterialTheme.spacing.medium)
             )
 
             when (val state = bookReviewState) {
@@ -161,17 +166,17 @@ fun BookshelfReviewScreen(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(16.dp)
+                            .padding(MaterialTheme.spacing.medium)
                             .size(80.dp)
                     )
                 }
 
                 BookReviewState.Initial -> {
                     Text(
-                        text = "Initial State",
+                        text = stringResource(id = R.string.initial_state),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(MaterialTheme.spacing.medium)
                     )
                 }
 
@@ -179,11 +184,11 @@ fun BookshelfReviewScreen(
                     val review = state.review
 
                     Text(
-                        text = "Read the full New York Times review",
+                        text = stringResource(id = R.string.read_the_full_new_york_times_review),
                         style = MaterialTheme.typography.bodyLarge,
                         color = if (isSystemInDarkTheme()) Color.White else Color.Blue,
                         modifier = Modifier
-                            .padding(16.dp)
+                            .padding(MaterialTheme.spacing.medium)
                             .clickable {
                                 Timber.d("Opening book review link: ${review.url}")
                                 uriHandler.openUri(review.url)
@@ -196,25 +201,29 @@ fun BookshelfReviewScreen(
                         text = "Error loading review: ${state.message}",
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(MaterialTheme.spacing.medium)
                     )
                 }
 
                 BookReviewState.NoReview -> {
                     Text(
-                        text = "No review available for this book.",
+                        text = stringResource(id = R.string.no_review_available_for_this_book),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(MaterialTheme.spacing.medium)
                     )
                 }
             }
             Text(
-                text = "Buy this book on Amazon",
+                text = stringResource(id = R.string.buy_this_book_on_amazon),
                 style = MaterialTheme.typography.bodyLarge,
                 color = if (isSystemInDarkTheme()) Color.White else Color.Blue,
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
+                    .padding(
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium,
+                        top = MaterialTheme.spacing.small,
+                        bottom = MaterialTheme.spacing.none)
                     .clickable {
                         uriHandler.openUri(amazonProductUrl)
                     }

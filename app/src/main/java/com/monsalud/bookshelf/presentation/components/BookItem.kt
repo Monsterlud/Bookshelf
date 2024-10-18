@@ -25,6 +25,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.monsalud.bookshelf.R
 import com.monsalud.bookshelf.data.local.room.BookEntity
+import com.monsalud.bookshelf.ui.theme.spacing
 
 @Composable
 fun BookItem(
@@ -42,14 +43,14 @@ fun BookItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onClick(book.primaryIsbn13) }
-                .padding(16.dp),
+                .padding(MaterialTheme.spacing.medium),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = book.rank.toString(),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(end = 8.dp),
+                modifier = Modifier.padding(end = MaterialTheme.spacing.small),
             )
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -61,32 +62,32 @@ fun BookItem(
                 error = painterResource(id = R.drawable.error_image),
                 modifier = Modifier
                     .size(120.dp)
-                    .padding(end = 16.dp),
+                    .padding(end = MaterialTheme.spacing.medium),
                 contentScale = ContentScale.Fit,
             )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick(book.primaryIsbn13) }
-                    .padding(8.dp)
+                    .padding(MaterialTheme.spacing.small)
             ) {
                 Text(
                     text = "Weeks on List: ${book.weeksOnList}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(bottom = 0.dp)
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.none)
                 )
                 Text(
                     text = book.title,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(bottom = 0.dp)
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.none)
                 )
                 Text(
                     text = book.contributor,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(bottom = 0.dp)
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.none)
                 )
                 Text(
                     text = book.description,

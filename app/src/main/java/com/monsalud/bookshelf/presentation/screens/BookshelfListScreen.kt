@@ -19,13 +19,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.monsalud.bookshelf.R
 import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.presentation.BookshelfViewModel
 import com.monsalud.bookshelf.presentation.components.BookItem
 import com.monsalud.bookshelf.presentation.components.OnboardingDialog
+import com.monsalud.bookshelf.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -62,20 +65,28 @@ fun BookshelfListScreen(
             Text(
                 text = listName,
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 0.dp)
+                modifier = Modifier.padding(
+                    top = MaterialTheme.spacing.medium,
+                    start = MaterialTheme.spacing.medium,
+                    end = MaterialTheme.spacing.medium,
+                    bottom = MaterialTheme.spacing.none)
             )
             Text(
-                text = "A New York Times Best Seller List",
+                text = stringResource(id = R.string.list_subtitle),
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 0.dp)
+                modifier = Modifier.padding(
+                    top = MaterialTheme.spacing.none,
+                    start = MaterialTheme.spacing.medium, end = MaterialTheme.spacing.medium,
+                    bottom = MaterialTheme.spacing.none
+                )
             )
 
             if (!isLoading && listWithBooks != null) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(MaterialTheme.spacing.small),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
                 ) {
                     items(listWithBooks!!.books) { book ->
                         BookItem(
@@ -89,7 +100,7 @@ fun BookshelfListScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "No Data Available")
+                    Text(text = stringResource(id = R.string.no_data_available))
                 }
             }
         }
@@ -97,7 +108,7 @@ fun BookshelfListScreen(
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(16.dp)
+                    .padding(MaterialTheme.spacing.medium)
                     .size(80.dp)
             )
         }
