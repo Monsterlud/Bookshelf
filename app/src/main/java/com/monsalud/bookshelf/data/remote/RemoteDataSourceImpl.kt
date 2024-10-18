@@ -10,6 +10,7 @@ import io.ktor.client.request.parameter
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.http.contentType
 import io.ktor.utils.io.errors.IOException
+import timber.log.Timber
 
 
 class RemoteDataSourceImpl(
@@ -39,6 +40,7 @@ class RemoteDataSourceImpl(
                     parameter("api-key", NetworkConstants.API_KEY)
                     parameter("isbn", isbn)
                 }
+            Timber.d("Successfully retrieved from API: $bookReview")
             Result.success(bookReview)
         } catch (e: IOException) {
             Result.failure(DataError.Network(e))

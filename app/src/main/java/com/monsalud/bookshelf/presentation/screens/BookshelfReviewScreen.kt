@@ -47,6 +47,8 @@ fun BookshelfReviewScreen(
     bookImage: String,
     amazonProductUrl: String,
     author: String,
+    title: String,
+    description: String,
 ) {
 
     val viewModel: BookshelfViewModel = koinViewModel()
@@ -114,6 +116,45 @@ fun BookshelfReviewScreen(
                 thickness = 2.dp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 0.dp,
+                    bottom = 0.dp
+                )
+            )
+            Text(
+                text = author,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 0.dp,
+                    bottom = 0.dp
+                )
+            )
+            Text(
+                text = "Publisher: $publisher",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 0.dp
+                )
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.padding(16.dp)
+            )
 
             when (val state = bookReviewState) {
                 is BookReviewState.Loading -> {
@@ -137,45 +178,6 @@ fun BookshelfReviewScreen(
                 is BookReviewState.Success -> {
                     val review = state.review
 
-                    Text(
-                        text = review.bookTitle,
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 0.dp,
-                            bottom = 0.dp
-                        )
-                    )
-                    Text(
-                        text = author,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 0.dp,
-                            bottom = 0.dp
-                        )
-                    )
-                    Text(
-                        text = "Publisher: $publisher",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 8.dp,
-                            bottom = 0.dp
-                        )
-                    )
-                    Text(
-                        text = review.summary,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(16.dp)
-                    )
                     Text(
                         text = "Read the full New York Times review",
                         style = MaterialTheme.typography.bodyLarge,
@@ -201,13 +203,12 @@ fun BookshelfReviewScreen(
                 BookReviewState.NoReview -> {
                     Text(
                         text = "No review available for this book.",
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         modifier = Modifier.padding(16.dp)
                     )
                 }
             }
-
             Text(
                 text = "Buy this book on Amazon",
                 style = MaterialTheme.typography.bodyLarge,
@@ -233,6 +234,8 @@ fun BookReviewScreenPreview() {
         publisher = "Publisher",
         bookImage = "https://storage.googleapis.com/du-prd/books/images/9780593449592.jpg",
         amazonProductUrl = "",
-        author = ""
+        author = "",
+        title = "",
+        description = ""
     )
 }

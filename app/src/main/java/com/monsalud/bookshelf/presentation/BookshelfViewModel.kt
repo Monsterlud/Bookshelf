@@ -31,9 +31,6 @@ class BookshelfViewModel(
     private val _isLoadingPreferences = MutableStateFlow(true)
     val isLoadingPreferences: StateFlow<Boolean> = _isLoadingPreferences.asStateFlow()
 
-    private val _isLoadingReview = MutableStateFlow(false)
-    val isLoadingReview: StateFlow<Boolean> = _isLoadingReview.asStateFlow()
-
     private val _bookReviewState = MutableStateFlow<BookReviewState>(BookReviewState.Initial)
     val bookReviewState: StateFlow<BookReviewState> = _bookReviewState.asStateFlow()
 
@@ -61,7 +58,6 @@ class BookshelfViewModel(
         viewModelScope.launch {
             Timber.d("Fetching book review for ISBN13: $isbn13")
             _bookReviewState.value = BookReviewState.Loading
-            _isLoadingReview.value = true
             try {
                 repository.getBookReview(isbn13).collect { review ->
                     _bookReviewState.value = if (review!= null) {
@@ -74,8 +70,6 @@ class BookshelfViewModel(
                 Timber.e(e, "Error fetching book review")
                 _bookReviewState.value =
                     BookReviewState.Error(e.message ?: "Error fetching book review")
-            } finally {
-                _isLoadingReview.value = false
             }
         }
     }

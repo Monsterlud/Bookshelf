@@ -29,7 +29,7 @@ fun BookshelfTopBar(
     val isDetailScreen = currentBackStackEntry?.destination?.hasRoute<Screen.BookDetailScreen>()
 
     TopAppBar(
-        title = { Text(text = "Bookshelf") },
+        title = { Text(text = if (isDetailScreen == true) "Book Detail" else "Bookshelf") },
         navigationIcon = {
             IconButton(onClick = {
                 if (isDetailScreen == true) {

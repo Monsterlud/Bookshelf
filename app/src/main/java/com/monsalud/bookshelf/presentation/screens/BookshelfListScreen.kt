@@ -97,8 +97,8 @@ fun BookshelfListScreen(
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .size(80.dp)
                     .padding(16.dp)
+                    .size(80.dp)
             )
         }
     }

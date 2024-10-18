@@ -29,6 +29,8 @@ sealed class Screen {
         val bookImage: String,
         val amazonProductUrl: String,
         val author: String,
+        val title: String,
+        val description: String,
     )
 }
 
@@ -57,6 +59,8 @@ fun BookshelfNavHost(
                             bookImage = book.bookImage,
                             amazonProductUrl = book.amazonProductUrl,
                             author = book.author,
+                            title = book.title,
+                            description = book.description,
                         )
                     )
                 }
@@ -73,6 +77,8 @@ fun BookshelfNavHost(
                 book.bookImage,
                 book.amazonProductUrl,
                 book.author,
+                book.title,
+                book.description,
             )
         }
     }
