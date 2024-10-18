@@ -62,24 +62,7 @@ fun BookshelfListScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Text(
-                text = listName,
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.medium,
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium,
-                    bottom = MaterialTheme.spacing.none)
-            )
-            Text(
-                text = stringResource(id = R.string.list_subtitle),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(
-                    top = MaterialTheme.spacing.none,
-                    start = MaterialTheme.spacing.medium, end = MaterialTheme.spacing.medium,
-                    bottom = MaterialTheme.spacing.none
-                )
-            )
+            TitleSection(listName = listName)
 
             if (!isLoading && listWithBooks != null) {
                 LazyColumn(
@@ -120,6 +103,28 @@ fun BookshelfListScreen(
             }
         )
     }
+}
+
+@Composable
+fun TitleSection(listName: String) {
+    Text(
+        text = listName,
+        style = MaterialTheme.typography.headlineLarge,
+        modifier = Modifier.padding(
+            top = MaterialTheme.spacing.medium,
+            start = MaterialTheme.spacing.medium,
+            end = MaterialTheme.spacing.medium,
+            bottom = MaterialTheme.spacing.none)
+    )
+    Text(
+        text = stringResource(id = R.string.list_subtitle),
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier.padding(
+            top = MaterialTheme.spacing.none,
+            start = MaterialTheme.spacing.medium, end = MaterialTheme.spacing.medium,
+            bottom = MaterialTheme.spacing.none
+        )
+    )
 }
 
 @Composable

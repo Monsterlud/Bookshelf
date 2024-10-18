@@ -78,27 +78,7 @@ fun BookshelfReviewScreen(
                     .padding(top = MaterialTheme.spacing.medium),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Rank: $rank",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(
-                        start = MaterialTheme.spacing.medium,
-                        end = MaterialTheme.spacing.medium
-                    )
-                )
-                Text(
-                    text = "Last Week's Rank: $rankLastWeek",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.padding(end = MaterialTheme.spacing.medium)
-                )
-                Text(
-                    text = "Weeks on List: $weeksOnList",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                )
-
+                RankingSection(rank = rank, rankLastWeek = rankLastWeek, weeksOnList = weeksOnList)
             }
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -117,49 +97,15 @@ fun BookshelfReviewScreen(
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.small),
+                    .padding(
+                        horizontal = MaterialTheme.spacing.medium,
+                        vertical = MaterialTheme.spacing.small
+                    ),
                 thickness = 2.dp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium,
-                    top = MaterialTheme.spacing.none,
-                    bottom = MaterialTheme.spacing.none
-                )
-            )
-            Text(
-                text = author,
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium,
-                    top = MaterialTheme.spacing.none,
-                    bottom = MaterialTheme.spacing.none
-                )
-            )
-            Text(
-                text = "Publisher: $publisher",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium,
-                    top = MaterialTheme.spacing.small,
-                    bottom = MaterialTheme.spacing.none
-                )
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
-            )
+            BookInformationSection(title, author, publisher, description)
+
 
             when (val state = bookReviewState) {
                 is BookReviewState.Loading -> {
@@ -223,13 +169,91 @@ fun BookshelfReviewScreen(
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium,
                         top = MaterialTheme.spacing.small,
-                        bottom = MaterialTheme.spacing.none)
+                        bottom = MaterialTheme.spacing.none
+                    )
                     .clickable {
                         uriHandler.openUri(amazonProductUrl)
                     }
             )
         }
     }
+}
+
+
+
+@Composable
+fun RankingSection(
+    rank: Int,
+    rankLastWeek: Int,
+    weeksOnList: Int
+) {
+    Text(
+        text = "Rank: $rank",
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.padding(
+            start = MaterialTheme.spacing.medium,
+            end = MaterialTheme.spacing.medium
+        )
+    )
+    Text(
+        text = "Last Week's Rank: $rankLastWeek",
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.padding(end = MaterialTheme.spacing.medium)
+    )
+    Text(
+        text = "Weeks on List: $weeksOnList",
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+    )
+}
+
+@Composable
+fun BookInformationSection(
+    title: String,
+    author: String,
+    publisher: String,
+    description: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.headlineLarge,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.padding(
+            start = MaterialTheme.spacing.medium,
+            end = MaterialTheme.spacing.medium,
+            top = MaterialTheme.spacing.none,
+            bottom = MaterialTheme.spacing.none
+        )
+    )
+    Text(
+        text = author,
+        style = MaterialTheme.typography.headlineSmall,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.padding(
+            start = MaterialTheme.spacing.medium,
+            end = MaterialTheme.spacing.medium,
+            top = MaterialTheme.spacing.none,
+            bottom = MaterialTheme.spacing.none
+        )
+    )
+    Text(
+        text = "Publisher: $publisher",
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.padding(
+            start = MaterialTheme.spacing.medium,
+            end = MaterialTheme.spacing.medium,
+            top = MaterialTheme.spacing.small,
+            bottom = MaterialTheme.spacing.none
+        )
+    )
+    Text(
+        text = description,
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.padding(MaterialTheme.spacing.medium)
+    )
 }
 
 @Composable
