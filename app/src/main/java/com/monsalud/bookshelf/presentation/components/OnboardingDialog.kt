@@ -64,7 +64,7 @@ fun OnboardingDialog(
     val tintColor = if (isSystemInDarkTheme()) {
         Color.Black.copy(alpha = 0.7f)
     } else {
-        Color.White.copy(alpha = 0.9f)
+        Color.White.copy(alpha = 0.7f)
     }
 
     BasicAlertDialog(
@@ -152,7 +152,7 @@ fun OnboardingDialog(
                     ) {
                         repeat(pagerState.pageCount) { iteration ->
                             val color =
-                                if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                if (pagerState.currentPage == iteration) Color.Black else Color.LightGray
                             Box(
                                 modifier = Modifier
                                     .padding(MaterialTheme.spacing.small)
