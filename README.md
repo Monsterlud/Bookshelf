@@ -8,7 +8,7 @@ A welcome screen introduces the User to the app and gives them simple informatio
 ![bookshelf_welcome](images/bookshelf_welcome.png)
 
 ## Navigation
-A navigation drawer gives you access to all of the lists. Clicking on any of them navigates you to a list view of Best Selling Books for that subject. All UI in this app are created using Jetpack Compose. All navigation is using the latest type-safe Compose Navigation.
+A navigation drawer gives you access to all of the lists. Clicking on any of them navigates you to a list view of Best Selling Books for that subject. 
 
 ![bookshelf_navigation](images/bookshelf_navigation.png)
 
@@ -35,6 +35,12 @@ Dependency Injection is handled by Koin, an open-source Kotlin-based Dependency 
 Remote calls are handled by Ktor, a Jetbrains kotlin-based HTTP client that retrieves the current data from the NYT Books API. The Moshi library is used to parse the network calls into local objects.
 
 Local Data is handled by a Room Database, complete with two DAO classes that define all interactions between the app and the database, and as mentioned before, a Preferences DataStore.
+
+## UI
+**Bookshelf** uses Jetpack Compose to create the UI and handle State. Some Composables have been separated out into components for reusability/readability. I also used the Coil library to load book images and the latest type-safe Compose Navigation library for navigation purposes.
+
+## Instructions for running Bookshelf
+After opening the app with an IDE (I used Android Studio Jellyfish), make sure these settings are used: Java 17, Gradle Plugin Version 8.4.0, and Gradle Version 8.6.
 
 
 
