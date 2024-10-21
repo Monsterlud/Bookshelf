@@ -11,6 +11,7 @@ A welcome screen introduces the User to the app and gives them simple informatio
 ## Navigation
 A navigation drawer gives you access to all of the lists. Clicking on any of them navigates you to a list view of Best Selling Books for that subject. 
 
+![bookshelf_navigation_light](images/bookshelf_navigation_light.png)
 ![bookshelf_navigation](images/bookshelf_navigation.png)
 
 
