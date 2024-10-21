@@ -3,7 +3,7 @@
 **Bookshelf** is your window into the Best Seller Lists of the New York Times. This app uses the New York Times Books API to retrieve the latest books on the most popular Best Seller lists: Fiction, Nonfiction, Culture, Food & Diet, Graphic Books & Manga, Politics & American History, Science, Sports & Fiteness, and Travel. 
 
 ## Welcome
-A welcome screen introduces the User to the app and gives them simple information about what to expect. Clicking out of this dialog triggers a change in a preference that indicates to the app whether to show or not show this information. I used Preferences DataStore to implement shared preferences.
+A welcome screen introduces the User to the app and gives them simple information about what to expect. Clicking out of this dialog triggers a change in a preference that indicates to the app whether to show or not show this information. 
 
 ![bookshelf_welcome](images/bookshelf_welcome.png)
 
@@ -34,7 +34,7 @@ Dependency Injection is handled by Koin, an open-source Kotlin-based Dependency 
 
 Remote calls are handled by Ktor, a Jetbrains kotlin-based HTTP client that retrieves the current data from the NYT Books API. The Moshi library is used to parse the network calls into local objects.
 
-Local Data is handled by a Room Database, complete with two DAO classes that define all interactions between the app and the database, and as mentioned before, a Preferences DataStore.
+Local Data is handled by a Room Database, complete with two DAO classes that define all interactions between the app and the database. For preferences (in this app, a Boolean regarding whether the User has seen the onboarding dialog introducting the app) I used Preferences DataStore.
 
 ## UI
 **Bookshelf** uses Jetpack Compose to create the UI and handle State. Some Composables have been separated out into components for reusability/readability. I also used the Coil library to load book images and the latest type-safe Compose Navigation library for navigation purposes.
