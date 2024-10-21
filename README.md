@@ -26,3 +26,18 @@ The BookReviewScreen is the detail view which gets some of its data passed from 
 
 ![bookshelf_detail_light](images/bookshelf_detail_light.png)
 ![bookshelf_detail](images/bookshelf_detail.png)
+
+## Architecture, Frameworks, & Libraries
+The Architecture that I chose was the popular MVVM pattern. The layers include PRESENTATION (Composables, ViewModel), DOMAIN, and DATA (Local, Remote). I have interfaces that define the contract that the implementation classes in the next layer must adhere to. Within the DATA layer is a repository implementation as well as LocalDataSource and RemoteDataSource interfaces and implementations.
+
+Dependency Injection is handled by Koin, an open-source Kotlin-based Dependency Injection framework. The dependency graph is located in the AppModule, which is started in the app's Application class.
+
+Remote calls are handled by Ktor, a Jetbrains kotlin-based HTTP client that retrieves the current data from the NYT Books API. The Moshi library is used to parse the network calls into local objects.
+
+Local Data is handled by a Room Database, complete with two DAO classes that define all interactions between the app and the database, and as mentioned before, a Preferences DataStore.
+
+
+
+
+
+
