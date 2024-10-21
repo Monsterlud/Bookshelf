@@ -39,6 +39,8 @@ Local Data is handled by a Room Database, complete with two DAO classes that def
 ## UI
 **Bookshelf** uses Jetpack Compose to create the UI and handle State. Some Composables have been separated out into components for reusability/readability. I also used the Coil library to load book images and the latest type-safe Compose Navigation library for navigation purposes.
 
+App theming is implemented with light and dark theme color schemes. Colors have been carefully chosen for Accessibility (contrast) and design considerations. Colors and Typography were integrated into the theming using components that evoke the New York Times qualities of authority, trustworthiness, and tradition.
+
 ## Instructions for running Bookshelf
 After opening the app with an IDE (I used Android Studio Jellyfish), make sure these settings are used: Java 17, Gradle Plugin Version 8.4.0, and Gradle Version 8.6.
 
