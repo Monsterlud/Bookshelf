@@ -5,6 +5,7 @@
 ## Welcome
 A welcome screen introduces the User to the app and gives them simple information about what to expect. This dialog utilizes a horizontal pager that allows the User to swipe through three pages of information. Clicking out of this dialog triggers a change in a preference that indicates to the app whether to show or not show this information. 
 
+![bookshelf_welcome_light](images/bookshelf_welcome_light.png)
 ![bookshelf_welcome](images/bookshelf_welcome.png)
 
 ## Navigation
