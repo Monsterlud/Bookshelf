@@ -3,7 +3,7 @@
 **Bookshelf** is your window into the Best Seller Lists of the New York Times. This app uses the New York Times Books API to retrieve the latest books on the most popular Best Seller lists: Fiction, Nonfiction, Culture, Food & Diet, Graphic Books & Manga, Politics & American History, Science, Sports & Fiteness, and Travel. 
 
 ## Welcome
-A welcome screen introduces the User to the app and gives them simple information about what to expect. Clicking out of this dialog triggers a change in a preference that indicates to the app whether to show or not show this information. 
+A welcome screen introduces the User to the app and gives them simple information about what to expect. This dialog utilizes a horizontal pager that allows the User to swipe through three pages of information. Clicking out of this dialog triggers a change in a preference that indicates to the app whether to show or not show this information. 
 
 ![bookshelf_welcome](images/bookshelf_welcome.png)
 
