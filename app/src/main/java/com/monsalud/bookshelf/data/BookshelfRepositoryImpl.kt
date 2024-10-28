@@ -22,29 +22,38 @@ class BookshelfRepositoryImpl(
 ) : BookshelfRepository {
 
     override suspend fun refreshBookListInDBFromAPI(listName: String) {
-        val result = remoteDataSource.getBooksInListFromApi(listName)
-        result.onSuccess { jsonString ->
-            Timber.d("Received JSON String: $jsonString")
-            if (jsonString != null) {
-                try {
-                    val listWithBooks = parseBookListJsonToListWithBooks(jsonString)
-                    Timber.d("Parsed JSON String to ListWithBooks: $listWithBooks")
-                    localDataSource.deleteListWithBooks(listName)
-                    localDataSource.insertListWithBooks(listWithBooks)
-                } catch (e: Exception) {
-                    Timber.d("Error parsing JSON String: ${e.message}")
-                    e.printStackTrace()
+        try {
+            val result = remoteDataSource.getBooksInListFromApi(listName)
+            result.onSuccess { jsonString ->
+                Timber.d("Received JSON String: $jsonString")
+                if (jsonString != null) {
+                    try {
+                        val listWithBooks = parseBookListJsonToListWithBooks(jsonString)
+                        Timber.d("Parsed JSON String to ListWithBooks: $listWithBooks")
+                        localDataSource.deleteListWithBooks(listName)
+                        localDataSource.insertListWithBooks(listWithBooks)
+                    } catch (e: Exception) {
+                        Timber.d("Error parsing JSON String: ${e.message}")
+                        e.printStackTrace()
+                    }
                 }
             }
-        }
-        result.onFailure {
-            Timber.e("Error fetching book list: ${it.message}")
-            throw IllegalStateException("Error fetching book list: ${it.message}")
+            result.onFailure {
+                Timber.e("Error fetching book list: ${it.message}")
+                throw IllegalStateException("Error fetching book list: ${it.message}")
+            }
+        } catch (e: Exception) {
+            Timber.e("Error fetching book list: ${e.message}")
+            throw IllegalStateException("Error fetching book list: ${e.message}")
         }
     }
 
     override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks?> {
         return localDataSource.getListWithBooks(listName)
+    }
+
+    override suspend fun hasDataForList(listName: String): Boolean {
+        return localDataSource.getListWithBooks(listName).first() != null
     }
 
     override suspend fun getBookReview(isbn13: String) : Flow<BookReviewEntity?> {

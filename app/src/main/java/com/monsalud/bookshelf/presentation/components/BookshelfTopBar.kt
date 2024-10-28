@@ -45,7 +45,7 @@ fun BookshelfTopBar(
                     } else {
                         Icons.Default.Menu
                     },
-                    contentDescription = "Hamburger Navigation Menu"
+                    contentDescription = if (isDetailScreen == true) "Back Arrow" else "Navigation Menu"
                 )
             }
         },

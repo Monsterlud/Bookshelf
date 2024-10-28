@@ -24,6 +24,14 @@ interface BookshelfRepository {
      */
     suspend fun getListWithBooks(listName: String) : Flow<ListWithBooks?>
 
+    /**
+     * Checks if data exists in the database for a specified book list.
+     *
+     * @param listName The name of the book list to check
+     * @return True if the list contains data, false otherwise
+     */
+    suspend fun hasDataForList(listName: String) : Boolean
+
 
     /**
      * Retrieves a book review, prioritizing the local database but potentially fetching from the API if not found locally.
