@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import coil.request.ImageRequest
 import com.monsalud.bookshelf.R
 import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.ui.theme.spacing
+import timber.log.Timber
 
 @Composable
 fun BookItem(
@@ -34,7 +36,9 @@ fun BookItem(
     onClick: (String) -> Unit,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().testTag("bookItemCard"),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("bookItemCard"),
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer
@@ -58,7 +62,7 @@ fun BookItem(
                     .data(book.bookImage)
                     .crossfade(true)
                     .build(),
-                contentDescription = "Cover of ${book.title}",
+                contentDescription = stringResource(id = R.string.book_image_description, book.title) ,
                 placeholder = null,
                 error = painterResource(id = R.drawable.error_image),
                 modifier = Modifier
@@ -73,7 +77,7 @@ fun BookItem(
                     .padding(MaterialTheme.spacing.small)
             ) {
                 Text(
-                    text = "Weeks on List: ${book.weeksOnList}",
+                    text = stringResource(id = R.string.weeks_on_list, book.weeksOnList),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     modifier = Modifier.padding(bottom = MaterialTheme.spacing.none)

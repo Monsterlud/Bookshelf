@@ -10,11 +10,9 @@ import com.monsalud.bookshelf.data.local.LocalDataSourceImpl
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookshelfDatabase
 import com.monsalud.bookshelf.data.remote.RemoteDataSourceImpl
-import com.monsalud.bookshelf.data.utils.NetworkUtils
 import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.monsalud.bookshelf.presentation.BookshelfViewModel
 import com.monsalud.bookshelf.work.BookshelfWorkerFactory
-import com.monsalud.bookshelf.work.RefreshBooksDataWorker
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature
@@ -70,7 +68,6 @@ val appModule = module {
     single(qualifier = null) { moduleInstance.ktorClient() }
 
     single { BookshelfDataStore(context = get()) }
-    single { NetworkUtils() }
     single { BookshelfWorkerFactory(repository = get()) }
 }
 

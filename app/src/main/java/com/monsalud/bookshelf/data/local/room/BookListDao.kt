@@ -8,7 +8,7 @@ import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface BookListDAO {
+interface BookListDao {
 
     /** DAO methods for Book List */
 

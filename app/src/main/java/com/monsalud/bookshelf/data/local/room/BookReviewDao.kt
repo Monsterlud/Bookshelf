@@ -7,7 +7,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface BookReviewDAO {
+interface BookReviewDao {
 
     /** DAO methods for Book Reviews */
 

@@ -59,7 +59,7 @@ fun NavDrawer(
                 Spacer(modifier = Modifier.height(12.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
-                navigationItems.forEachIndexed { index, item ->
+                getNavigationItems().forEachIndexed { index, item ->
                     NavigationDrawerItem(
                         label = { Text(text = item.title) },
                         selected = index == selectedItemIndex,

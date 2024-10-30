@@ -85,7 +85,7 @@ fun BookshelfReviewScreen(
                     .data(bookImage)
                     .crossfade(true)
                     .build(),
-                contentDescription = "Book Cover",
+                contentDescription = stringResource(id = R.string.book_image_description, title),
                 placeholder = null,
                 error = painterResource(id = R.drawable.error_image),
                 modifier = Modifier
@@ -144,7 +144,7 @@ fun BookshelfReviewScreen(
 
                 is BookReviewState.Error -> {
                     Text(
-                        text = "Error loading review: ${state.message}",
+                        text = stringResource(id = R.string.error_loading_review, state.message),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(MaterialTheme.spacing.medium)

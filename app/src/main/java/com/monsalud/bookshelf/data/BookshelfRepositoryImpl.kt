@@ -6,7 +6,7 @@ import com.monsalud.bookshelf.data.local.room.ListWithBooks
 import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDTO
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookEntity
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookListEntity
-import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDTO
+import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDto
 import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -34,7 +34,6 @@ class BookshelfRepositoryImpl(
                         localDataSource.insertListWithBooks(listWithBooks)
                     } catch (e: Exception) {
                         Timber.d("Error parsing JSON String: ${e.message}")
-                        e.printStackTrace()
                     }
                 }
             }
@@ -99,7 +98,7 @@ class BookshelfRepositoryImpl(
         val moshi = Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
-        val adapter = moshi.adapter(BookReviewResponseDTO::class.java)
+        val adapter = moshi.adapter(BookReviewResponseDto::class.java)
         val apiResponse =
             adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
         if (apiResponse.results.isEmpty()) {

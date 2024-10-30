@@ -19,60 +19,67 @@ import androidx.compose.material.icons.outlined.Museum
 import androidx.compose.material.icons.outlined.Science
 import androidx.compose.material.icons.outlined.SportsFootball
 import androidx.compose.material.icons.outlined.TravelExplore
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.monsalud.bookshelf.R
 
-val navigationItems = listOf(
-    NavigationItem(
-        title = "Fiction",
-        listName = "Hardcover Fiction",
-        selectedIcon = Icons.Filled.Book,
-        unselectedIcon = Icons.Outlined.Book,
-    ),
-    NavigationItem(
-        title = "Non-Fiction",
-        listName = "Hardcover Nonfiction",
-        selectedIcon = Icons.Filled.Balance,
-        unselectedIcon = Icons.Outlined.Balance,
-    ),
-    NavigationItem(
-        title = "Culture",
-        listName = "Culture",
-        selectedIcon = Icons.Filled.Museum,
-        unselectedIcon = Icons.Outlined.Museum,
-    ),
-    NavigationItem(
-        title = "Food and Diet",
-        listName = "Food and Fitness",
-        selectedIcon = Icons.Filled.Fastfood,
-        unselectedIcon = Icons.Outlined.Fastfood,
-    ),
-    NavigationItem(
-        title = "Graphic Books and Manga",
-        listName = "Graphic Books and Manga",
-        selectedIcon = Icons.Filled.Draw,
-        unselectedIcon = Icons.Outlined.Draw,
-    ),
-    NavigationItem(
-        title = "Politics and American History",
-        listName = "Hardcover Political Books",
-        selectedIcon = Icons.Filled.HistoryEdu,
-        unselectedIcon = Icons.Outlined.HistoryEdu,
-    ),
-    NavigationItem(
-        title = "Science",
-        listName = "Science",
-        selectedIcon = Icons.Filled.Science,
-        unselectedIcon = Icons.Outlined.Science,
-    ),
-    NavigationItem(
-        title = "Sports and Fitness",
-        listName = "Sports",
-        selectedIcon = Icons.Filled.SportsFootball,
-        unselectedIcon = Icons.Outlined.SportsFootball,
-    ),
-    NavigationItem(
-        title = "Travel",
-        listName = "Travel",
-        selectedIcon = Icons.Filled.TravelExplore,
-        unselectedIcon = Icons.Outlined.TravelExplore,
-    ),
-)
+
+@Composable
+fun getNavigationItems(): List<NavigationItem> {
+    return listOf(
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_fiction),
+            listName = stringResource(id = R.string.list_name_fiction),
+            selectedIcon = Icons.Filled.Book,
+            unselectedIcon = Icons.Outlined.Book,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_nonfiction),
+            listName = stringResource(id = R.string.list_name_nonfiction),
+            selectedIcon = Icons.Filled.Balance,
+            unselectedIcon = Icons.Outlined.Balance,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_culture),
+            listName = stringResource(id = R.string.list_name_culture),
+            selectedIcon = Icons.Filled.Museum,
+            unselectedIcon = Icons.Outlined.Museum,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_food_and_diet),
+            listName = stringResource(id = R.string.list_name_food_and_diet),
+            selectedIcon = Icons.Filled.Fastfood,
+            unselectedIcon = Icons.Outlined.Fastfood,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_graphic_books),
+            listName = stringResource(id = R.string.list_name_graphic_books),
+            selectedIcon = Icons.Filled.Draw,
+            unselectedIcon = Icons.Outlined.Draw,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_politics),
+            listName = stringResource(id = R.string.list_name_politics),
+            selectedIcon = Icons.Filled.HistoryEdu,
+            unselectedIcon = Icons.Outlined.HistoryEdu,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_science),
+            listName = stringResource(id = R.string.list_name_science),
+            selectedIcon = Icons.Filled.Science,
+            unselectedIcon = Icons.Outlined.Science,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_sports),
+            listName = stringResource(id = R.string.list_name_sports),
+            selectedIcon = Icons.Filled.SportsFootball,
+            unselectedIcon = Icons.Outlined.SportsFootball,
+        ),
+        NavigationItem(
+            title = stringResource(id = R.string.list_title_travel),
+            listName = stringResource(id = R.string.list_name_travel),
+            selectedIcon = Icons.Filled.TravelExplore,
+            unselectedIcon = Icons.Outlined.TravelExplore,
+        ),
+    )
+}

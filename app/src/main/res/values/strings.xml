@@ -13,6 +13,39 @@
     // NavDrawer
     <string name="app_subtitle">New York Times best selling books</string>
 
+    // NavigationItems
+    <string name="list_title_fiction">Fiction</string>
+    <string name="list_name_fiction">Hardcover Fiction</string>
+    <string name="list_title_nonfiction">Non-Fiction</string>
+    <string name="list_name_nonfiction">Hardcover Non-Fiction</string>
+    <string name="list_title_culture">Culture</string>
+    <string name="list_name_culture">Culture</string>
+    <string name="list_title_food_and_diet">Food and Diet</string>
+    <string name="list_name_food_and_diet">Food and Fitness</string>
+    <string name="list_title_graphic_books">Graphic Books and Manga</string>
+    <string name="list_name_graphic_books">Graphic Books and Manga</string>
+    <string name="list_title_politics">Politics and American History</string>
+    <string name="list_name_politics">Hardcover Political Books</string>
+    <string name="list_title_science">Science</string>
+    <string name="list_name_science">Science</string>
+    <string name="list_title_sports">Sports and Fitness</string>
+    <string name="list_name_sports">Sports</string>
+    <string name="list_title_travel">Travel</string>
+    <string name="list_name_travel">Travel</string>
+
+    // Top Bar
+    <string name="top_bar_title_list">Bookshelf</string>
+    <string name="top_bar_title_detail">Book Detail</string>
+    <string name="back_arrow">Back Arrow</string>
+    <string name="navigation_menu">Navigation Menu</string>
+
+    // Onboarding Dialog
+    <string name="close">Close</string>
+
+    // BookItem
+    <string name="book_image_description">Cover of %1$s</string>
+    <string name="weeks_on_list">Weeks on List: %1$s</string>
+
     // Bookshelf List Screen
     <string name="list_subtitle">A New York Times Best Seller List</string>
     <string name="no_data_available">No Data Available</string>
@@ -22,5 +55,6 @@
     <string name="read_the_full_new_york_times_review">Read the full New York Times review</string>
     <string name="no_review_available_for_this_book">No review available for this book</string>
     <string name="buy_this_book_on_amazon">Buy this book on Amazon</string>
+    <string name="error_loading_review">Error loading review: %1$s</string>
 
 </resources>

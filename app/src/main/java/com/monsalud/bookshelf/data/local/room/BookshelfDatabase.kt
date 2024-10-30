@@ -15,8 +15,8 @@ const val DATABASE_NAME = "bookshelf_database"
 )
 abstract class BookshelfDatabase : RoomDatabase() {
 
-    abstract fun bookListDao(): BookListDAO
-    abstract fun bookReviewDao(): BookReviewDAO
+    abstract fun bookListDao(): BookListDao
+    abstract fun bookReviewDao(): BookReviewDao
 
     companion object {
         @Volatile

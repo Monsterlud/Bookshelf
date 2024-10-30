@@ -11,9 +11,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.monsalud.bookshelf.R
 import com.monsalud.bookshelf.presentation.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +31,13 @@ fun BookshelfTopBar(
     val isDetailScreen = currentBackStackEntry?.destination?.hasRoute<Screen.BookDetailScreen>()
 
     TopAppBar(
-        title = { Text(text = if (isDetailScreen == true) "Book Detail" else "Bookshelf") },
+        title = {
+            Text(
+                text =
+                if (isDetailScreen == true) stringResource(id = R.string.top_bar_title_detail)
+                else stringResource(id = R.string.top_bar_title_list)
+            )
+        },
         navigationIcon = {
             IconButton(onClick = {
                 if (isDetailScreen == true) {
@@ -45,7 +53,9 @@ fun BookshelfTopBar(
                     } else {
                         Icons.Default.Menu
                     },
-                    contentDescription = if (isDetailScreen == true) "Back Arrow" else "Navigation Menu"
+                    contentDescription =
+                    if (isDetailScreen == true) stringResource(id = R.string.back_arrow)
+                    else stringResource(id = R.string.navigation_menu)
                 )
             }
         },

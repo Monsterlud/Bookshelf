@@ -2,9 +2,8 @@ package com.monsalud.bookshelf.data.local
 
 import com.monsalud.bookshelf.data.LocalDataSource
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
-import com.monsalud.bookshelf.data.local.room.BookEntity
-import com.monsalud.bookshelf.data.local.room.BookListDAO
-import com.monsalud.bookshelf.data.local.room.BookReviewDAO
+import com.monsalud.bookshelf.data.local.room.BookListDao
+import com.monsalud.bookshelf.data.local.room.BookReviewDao
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
 import kotlinx.coroutines.flow.Flow
@@ -12,8 +11,8 @@ import kotlinx.coroutines.flow.catch
 import timber.log.Timber
 
 class LocalDataSourceImpl(
-    private val bookListDao: BookListDAO,
-    private val bookReviewDAO: BookReviewDAO,
+    private val bookListDao: BookListDao,
+    private val bookReviewDAO: BookReviewDao,
     private val dataStore: BookshelfDataStore,
 ) : LocalDataSource {
 
