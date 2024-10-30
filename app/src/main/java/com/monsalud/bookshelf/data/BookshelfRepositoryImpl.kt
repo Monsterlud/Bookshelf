@@ -86,7 +86,7 @@ class BookshelfRepositoryImpl(
             adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
         val bookListEntity = apiResponse.results.toBookListEntity()
         val bookEntities =
-            apiResponse.results.books.map { it.toBookEntity(apiResponse.results.list_name) }
+            apiResponse.results.books.map { it.toBookEntity(apiResponse.results.listName) }
 
         return ListWithBooks(bookListEntity, bookEntities)
     }

@@ -2,6 +2,7 @@ package com.monsalud.bookshelf.data.remote.booklistapi
 
 import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.data.local.room.BookListEntity
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 
@@ -9,79 +10,79 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class BookListResponseDto(
-    val status: String,
-    val copyright: String,
-    val num_results: Int,
-    val last_modified: String,
-    val results: BookListResultDto
+    @Json(name = "status") val status: String,
+    @Json(name = "copyright") val copyright: String,
+    @Json(name = "num_results") val numResults: Int,
+    @Json(name = "last_modified") val lastModified: String,
+    @Json(name = "results") val results: BookListResultDto
 )
 
 @JsonClass(generateAdapter = true)
 data class BookListResultDto(
-    val list_name: String,
-    val bestsellers_date: String,
-    val published_date: String,
-    val display_name: String,
-    val normal_list_ends_at: Int,
-    val updated: String,
-    val books: List<BookDto>
+    @Json(name = "list_name") val listName: String,
+    @Json(name = "bestsellers_date") val bestsellersDate: String,
+    @Json(name = "published_date") val publishedDate: String,
+    @Json(name = "display_name") val displayName: String,
+    @Json(name = "normal_list_ends_at") val normalListEndsAt: Int,
+    @Json(name = "updated") val updated: String,
+    @Json(name = "books") val books: List<BookDto>
 )
 
 @JsonClass(generateAdapter = true)
 data class BookDto(
-    val rank: Int,
-    val rank_last_week: Int,
-    val weeks_on_list: Int,
-    val asterisk: Int,
-    val dagger: Int,
-    val primary_isbn10: String,
-    val primary_isbn13: String,
-    val publisher: String,
-    val description: String,
-    val price: Int,
-    val title: String,
-    val author: String,
-    val contributor: String,
-    val contributor_note: String,
-    val book_image: String,
-    val amazon_product_url: String,
-    val age_group: String,
-    val book_review_link: String,
-    val first_chapter_link: String,
-    val sunday_review_link: String,
-    val article_chapter_link: String,
+    @Json(name = "rank") val rank: Int,
+    @Json(name = "rank_last_week") val rankLastWeek: Int,
+    @Json(name = "weeks_on_list") val weeksOnList: Int,
+    @Json(name = "asterisk") val asterisk: Int,
+    @Json(name = "dagger") val dagger: Int,
+    @Json(name = "primary_isbn10") val primaryIsbn10: String,
+    @Json(name = "primary_isbn13") val primaryIsbn13: String,
+    @Json(name = "publisher") val publisher: String,
+    @Json(name = "description") val description: String,
+    @Json(name = "price") val price: Int,
+    @Json(name = "title") val title: String,
+    @Json(name = "author") val author: String,
+    @Json(name = "contributor") val contributor: String,
+    @Json(name = "contributor_note") val contributorNote: String,
+    @Json(name = "book_image") val bookImage: String,
+    @Json(name = "amazon_product_url") val amazonProductUrl: String,
+    @Json(name = "age_group") val ageGroup: String,
+    @Json(name = "book_review_link") val bookReviewLink: String,
+    @Json(name = "first_chapter_link") val firstChapterLink: String,
+    @Json(name = "sunday_review_link") val sundayReviewLink: String,
+    @Json(name = "article_chapter_link") val articleChapterLink: String,
 )
 
 fun BookListResultDto.toBookListEntity() = BookListEntity(
-    listName = list_name,
-    bestsellersDate = bestsellers_date,
-    publishedDate = published_date,
-    displayName = display_name,
-    normalListEndsAt = normal_list_ends_at,
+    listName = listName,
+    bestsellersDate = bestsellersDate,
+    publishedDate = publishedDate,
+    displayName = displayName,
+    normalListEndsAt = normalListEndsAt,
     updated = updated,
 )
 
 fun BookDto.toBookEntity(listName: String) = BookEntity(
     rank = rank,
-    rankLastWeek = rank_last_week,
-    weeksOnList = weeks_on_list,
+    rankLastWeek = rankLastWeek,
+    weeksOnList = weeksOnList,
     asterisk = asterisk,
     dagger = dagger,
-    primaryIsbn10 = primary_isbn10,
-    primaryIsbn13 = primary_isbn13,
+    primaryIsbn10 = primaryIsbn10,
+    primaryIsbn13 = primaryIsbn13,
     publisher = publisher,
     description = description,
     price = price,
     title = title,
     author = author,
     contributor = contributor,
-    contributorNote = contributor_note,
-    bookImage = book_image,
-    amazonProductUrl = amazon_product_url,
-    ageGroup = age_group,
-    bookReviewLink = book_review_link,
-    firstChapterLink = first_chapter_link,
-    sundayReviewLink = sunday_review_link,
-    articleChapterLink = article_chapter_link,
+    contributorNote = contributorNote,
+    bookImage = bookImage,
+    amazonProductUrl = amazonProductUrl,
+    ageGroup = ageGroup,
+    bookReviewLink = bookReviewLink,
+    firstChapterLink = firstChapterLink,
+    sundayReviewLink = sundayReviewLink,
+    articleChapterLink = articleChapterLink,
     listName = listName
 )
