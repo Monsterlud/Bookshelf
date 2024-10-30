@@ -9,7 +9,6 @@ import com.monsalud.bookshelf.presentation.screens.BookshelfReviewScreen
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -64,5 +63,7 @@ class BookshelfReviewScreenTest {
             )
         }
         composeTestRule.onNodeWithText("The Great Gatsby").assertIsDisplayed()
+        composeTestRule.onNodeWithText("F. Scott Fitzgerald").assertIsDisplayed()
+        composeTestRule.onNodeWithText("A novel about the decadence and excess of the Jazz Age").assertIsDisplayed()
     }
 }

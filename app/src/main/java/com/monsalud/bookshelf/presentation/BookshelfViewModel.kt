@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -34,11 +33,25 @@ class BookshelfViewModel(
     private val _bookReviewState = MutableStateFlow<BookReviewState>(BookReviewState.Initial)
     val bookReviewState: StateFlow<BookReviewState> = _bookReviewState.asStateFlow()
 
-    private val _listName = MutableStateFlow<String?>(null)
+    private val _bookListFlow = MutableStateFlow<ListWithBooks?>(null)
+    val bookListFlow = _bookListFlow.asStateFlow()
 
-    fun setListName(listName: String) {
-        _listName.value = listName
-        refreshBookList(listName)
+    init {
+        viewModelScope.launch {
+            _isLoading.value = false
+        }
+    }
+
+    fun setListName(newListName: String) {
+        viewModelScope.launch {
+            if (!repository.hasDataForList(newListName)) {
+                refreshBookList(newListName)
+            }
+            repository.getListWithBooks(newListName)
+                .collect { listWithBooks ->
+                    _bookListFlow.value = listWithBooks
+                }
+        }
     }
 
     private fun refreshBookList(listName: String) {
@@ -60,7 +73,7 @@ class BookshelfViewModel(
             _bookReviewState.value = BookReviewState.Loading
             try {
                 repository.getBookReview(isbn13).collect { review ->
-                    _bookReviewState.value = if (review!= null) {
+                    _bookReviewState.value = if (review != null) {
                         BookReviewState.Success(review)
                     } else {
                         BookReviewState.NoReview
@@ -73,18 +86,6 @@ class BookshelfViewModel(
             }
         }
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val bookListFlow: StateFlow<ListWithBooks?> = _listName
-        .filterNotNull()
-        .flatMapLatest { listName ->
-            repository.getListWithBooks(listName)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(10_000),
-            initialValue = null
-        )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val userPreferencesFlow: StateFlow<BookshelfDataStore.UserPreferences> = flow {

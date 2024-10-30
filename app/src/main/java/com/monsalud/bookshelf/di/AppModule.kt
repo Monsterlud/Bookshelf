@@ -13,6 +13,8 @@ import com.monsalud.bookshelf.data.remote.RemoteDataSourceImpl
 import com.monsalud.bookshelf.data.utils.NetworkUtils
 import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.monsalud.bookshelf.presentation.BookshelfViewModel
+import com.monsalud.bookshelf.work.BookshelfWorkerFactory
+import com.monsalud.bookshelf.work.RefreshBooksDataWorker
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature
@@ -39,8 +41,16 @@ val appModule = module {
     fun provideBookReviewDao(database: BookshelfDatabase) = database.bookReviewDao()
 
     single { provideDatabase(androidApplication()) } bind BookshelfDatabase::class
-    single { provideBookListDao(get()) }
-    single { provideBookReviewDao(get()) }
+    single {
+        provideBookListDao(
+            database = get()
+        )
+    }
+    single {
+        provideBookReviewDao(
+            database = get()
+        )
+    }
 
     viewModel { BookshelfViewModel(repository = get()) }
     single {
@@ -49,12 +59,19 @@ val appModule = module {
             remoteDataSource = get()
         )
     } bind BookshelfRepository::class
-    single { LocalDataSourceImpl(get(), get(), get()) } bind LocalDataSource::class
+    single {
+        LocalDataSourceImpl(
+            bookListDao = get(),
+            bookReviewDAO = get(),
+            dataStore = get()
+        )
+    } bind LocalDataSource::class
     single { RemoteDataSourceImpl(client = get()) } bind RemoteDataSource::class
     single(qualifier = null) { moduleInstance.ktorClient() }
 
-    single { BookshelfDataStore(get()) }
+    single { BookshelfDataStore(context = get()) }
     single { NetworkUtils() }
+    single { BookshelfWorkerFactory(repository = get()) }
 }
 
 class AppModule {

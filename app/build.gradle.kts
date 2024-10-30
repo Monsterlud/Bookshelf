@@ -82,6 +82,7 @@ dependencies {
     // Moshi
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.androidx.work.runtime.ktx)
     ksp(libs.moshi.codegen)
 
     // Navigation
