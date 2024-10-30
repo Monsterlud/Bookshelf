@@ -7,8 +7,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
-import com.monsalud.bookshelf.presentation.BookshelfViewModel
-import com.monsalud.bookshelf.presentation.screens.BookshelfListScreen
+import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListViewModel
+import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListScreen
 import com.monsalud.bookshelf.ui.theme.BookshelfTheme
 import io.mockk.every
 import io.mockk.mockk
@@ -29,7 +29,7 @@ class BookShelfLIstScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private lateinit var mockViewModel: BookshelfViewModel
+    private lateinit var mockViewModel: BookshelfListViewModel
 
     @Before
     fun setUp() {

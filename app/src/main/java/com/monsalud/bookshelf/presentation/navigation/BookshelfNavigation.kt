@@ -8,8 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.monsalud.bookshelf.presentation.screens.BookshelfListScreen
-import com.monsalud.bookshelf.presentation.screens.BookshelfReviewScreen
+import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListScreen
+import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookshelfReviewScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -8,27 +8,27 @@ import com.squareup.moshi.JsonClass
 /** DTOs to handle Books List API data */
 
 @JsonClass(generateAdapter = true)
-data class BookListResponseDTO(
+data class BookListResponseDto(
     val status: String,
     val copyright: String,
     val num_results: Int,
     val last_modified: String,
-    val results: BookListResultDTO
+    val results: BookListResultDto
 )
 
 @JsonClass(generateAdapter = true)
-data class BookListResultDTO(
+data class BookListResultDto(
     val list_name: String,
     val bestsellers_date: String,
     val published_date: String,
     val display_name: String,
     val normal_list_ends_at: Int,
     val updated: String,
-    val books: List<BookDTO>
+    val books: List<BookDto>
 )
 
 @JsonClass(generateAdapter = true)
-data class BookDTO(
+data class BookDto(
     val rank: Int,
     val rank_last_week: Int,
     val weeks_on_list: Int,
@@ -52,7 +52,7 @@ data class BookDTO(
     val article_chapter_link: String,
 )
 
-fun BookListResultDTO.toBookListEntity() = BookListEntity(
+fun BookListResultDto.toBookListEntity() = BookListEntity(
     listName = list_name,
     bestsellersDate = bestsellers_date,
     publishedDate = published_date,
@@ -61,7 +61,7 @@ fun BookListResultDTO.toBookListEntity() = BookListEntity(
     updated = updated,
 )
 
-fun BookDTO.toBookEntity(listName: String) = BookEntity(
+fun BookDto.toBookEntity(listName: String) = BookEntity(
     rank = rank,
     rankLastWeek = rank_last_week,
     weeksOnList = weeks_on_list,

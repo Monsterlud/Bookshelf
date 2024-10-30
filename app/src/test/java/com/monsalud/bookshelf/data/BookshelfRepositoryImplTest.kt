@@ -3,7 +3,13 @@ package com.monsalud.bookshelf.data
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
+import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDto
+import com.monsalud.bookshelf.data.remote.booklistapi.BookListResultDto
+import com.monsalud.bookshelf.data.remote.booklistapi.toBookListEntity
 import com.monsalud.bookshelf.data.remote.listResponse
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -31,7 +37,8 @@ class BookshelfRepositoryImplTest {
     fun setUp() {
         localDataSource = mockk<LocalDataSource>()
         remoteDataSource = mockk<RemoteDataSource>()
-        repository = BookshelfRepositoryImpl(localDataSource, remoteDataSource)
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        repository = BookshelfRepositoryImpl(localDataSource, remoteDataSource, moshi)
     }
 
     @Test

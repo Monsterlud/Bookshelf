@@ -24,6 +24,9 @@ class BookshelfDataStore(
     internal object PreferencesKeys {
         val HAS_SEEN_ONBOARDING_DIALOG = booleanPreferencesKey("has_seen_onboarding_dialog")
     }
+    data class UserPreferences(
+        val hasSeenOnboardingDialog: Boolean
+    )
 
     val preferencesFlow = dataStore.data
         .catch { exception ->
@@ -39,10 +42,6 @@ class BookshelfDataStore(
             UserPreferences(hasSeenOnboardingDialog = hasSeenOnboardingDialog)
 
         }
-
-    data class UserPreferences(
-        val hasSeenOnboardingDialog: Boolean
-    )
 
     suspend fun updateHasSeenOnboardingDialog(hasSeen: Boolean) {
         dataStore.edit { preferences ->

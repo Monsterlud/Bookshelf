@@ -3,13 +3,12 @@ package com.monsalud.bookshelf.data
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
-import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDTO
+import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDto
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookEntity
 import com.monsalud.bookshelf.data.remote.booklistapi.toBookListEntity
 import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDto
 import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -19,6 +18,7 @@ import java.util.concurrent.TimeUnit
 class BookshelfRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
+    private val moshi: Moshi,
 ) : BookshelfRepository {
 
     override suspend fun refreshBookListInDBFromAPI(listName: String) {
@@ -81,10 +81,7 @@ class BookshelfRepositoryImpl(
     /** Private Helper Functions */
 
     private fun parseBookListJsonToListWithBooks(jsonString: String): ListWithBooks {
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-        val adapter = moshi.adapter(BookListResponseDTO::class.java)
+        val adapter = moshi.adapter(BookListResponseDto::class.java)
         val apiResponse =
             adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
         val bookListEntity = apiResponse.results.toBookListEntity()
@@ -95,9 +92,6 @@ class BookshelfRepositoryImpl(
     }
 
     private fun parseBookReviewJsonToBookReviewEntity(jsonString: String): BookReviewEntity? {
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
         val adapter = moshi.adapter(BookReviewResponseDto::class.java)
         val apiResponse =
             adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")

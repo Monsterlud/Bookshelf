@@ -3,9 +3,10 @@ package com.monsalud.bookshelf
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.monsalud.bookshelf.presentation.BookReviewState
-import com.monsalud.bookshelf.presentation.BookshelfViewModel
-import com.monsalud.bookshelf.presentation.screens.BookshelfReviewScreen
+import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookReviewState
+import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListViewModel
+import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookshelfReviewScreen
+import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookshelfReviewViewModel
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ class BookshelfReviewScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private lateinit var mockViewModel: BookshelfViewModel
+    private lateinit var mockViewModel: BookshelfReviewViewModel
 
     @Before
     fun setUp() {

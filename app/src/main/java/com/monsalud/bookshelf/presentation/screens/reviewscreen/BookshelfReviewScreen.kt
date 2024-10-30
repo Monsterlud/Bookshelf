@@ -1,4 +1,4 @@
-package com.monsalud.bookshelf.presentation.screens
+package com.monsalud.bookshelf.presentation.screens.reviewscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +33,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.monsalud.bookshelf.R
-import com.monsalud.bookshelf.presentation.BookReviewState
-import com.monsalud.bookshelf.presentation.BookshelfViewModel
 import com.monsalud.bookshelf.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
@@ -53,7 +51,7 @@ fun BookshelfReviewScreen(
     description: String,
 ) {
 
-    val viewModel: BookshelfViewModel = koinViewModel()
+    val viewModel: BookshelfReviewViewModel = koinViewModel()
     val uriHandler = LocalUriHandler.current
 
     val bookReviewState by viewModel.bookReviewState.collectAsStateWithLifecycle()

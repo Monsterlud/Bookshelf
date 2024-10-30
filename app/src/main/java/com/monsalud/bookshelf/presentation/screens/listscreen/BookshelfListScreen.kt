@@ -1,4 +1,4 @@
-package com.monsalud.bookshelf.presentation.screens
+package com.monsalud.bookshelf.presentation.screens.listscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.monsalud.bookshelf.R
 import com.monsalud.bookshelf.data.local.room.BookEntity
-import com.monsalud.bookshelf.presentation.BookshelfViewModel
 import com.monsalud.bookshelf.presentation.components.BookItem
 import com.monsalud.bookshelf.presentation.components.OnboardingDialog
 import com.monsalud.bookshelf.ui.theme.spacing
@@ -37,7 +36,7 @@ fun BookshelfListScreen(
     listName: String,
     onBookClick: (BookEntity) -> Unit,
 ) {
-    val viewModel: BookshelfViewModel = koinViewModel()
+    val viewModel: BookshelfListViewModel = koinViewModel()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val userPreferences by viewModel.userPreferencesFlow.collectAsStateWithLifecycle()
     val isLoadingPreferences by viewModel.isLoadingPreferences.collectAsStateWithLifecycle()
