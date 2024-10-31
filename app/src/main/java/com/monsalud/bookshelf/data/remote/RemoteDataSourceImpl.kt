@@ -3,7 +3,6 @@ package com.monsalud.bookshelf.data.remote
 import com.monsalud.bookshelf.data.RemoteDataSource
 import com.monsalud.bookshelf.data.remote.booklistapi.BookListErrorResponse
 import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDto
-import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewDto
 import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewErrorResponse
 import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDto
 import com.monsalud.bookshelf.data.utils.DataError
@@ -17,7 +16,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.utils.io.errors.IOException
 import timber.log.Timber
 
 
@@ -26,7 +24,7 @@ class RemoteDataSourceImpl(
 ) : RemoteDataSource {
 
     override suspend fun getBooksInListFromApi(list: String): Result<BookListResponseDto> {
-        var result: Result<BookListResponseDto> = Result.failure(DataError.Unknown(Exception()))
+        var result: Result<BookListResponseDto> = Result.failure(DataError.Network(Exception()))
         runCatching {
             val response =
                 client.get("${BASE_URL}/lists/${list}.json") {
@@ -59,7 +57,7 @@ class RemoteDataSourceImpl(
 
     override suspend fun getBookReviewFromApi(isbn: String): Result<BookReviewResponseDto> {
         var result: Result<BookReviewResponseDto> =
-            Result.failure(DataError.Unknown(Exception()))
+            Result.failure(DataError.Network(Exception()))
         runCatching {
             val response = client.get("${BASE_URL}/reviews.json") {
                 contentType(Json)

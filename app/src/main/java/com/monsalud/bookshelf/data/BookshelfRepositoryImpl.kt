@@ -28,6 +28,10 @@ class BookshelfRepositoryImpl(
             .map { bookListResponseDto ->
                 val bookListResultDto = bookListResponseDto.results
 
+                if (bookListResultDto.books.isEmpty()) {
+                    return
+                }
+
                 val bookListEntity = BookListEntity(
                     listName = bookListResultDto.listName,
                     bestsellersDate = bookListResultDto.bestsellersDate,

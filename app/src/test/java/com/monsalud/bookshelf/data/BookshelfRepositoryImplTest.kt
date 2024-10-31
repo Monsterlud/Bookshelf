@@ -3,11 +3,8 @@ package com.monsalud.bookshelf.data
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
-import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDto
-import com.monsalud.bookshelf.data.remote.booklistapi.BookListResultDto
-import com.monsalud.bookshelf.data.remote.booklistapi.toBookListEntity
-import com.monsalud.bookshelf.data.remote.listResponse
-import com.squareup.moshi.JsonAdapter
+import com.monsalud.bookshelf.data.remote.mockBookListResponseDto
+import com.monsalud.bookshelf.data.remote.mockEmptyBookListResponseDto
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.mockk.Runs
@@ -22,7 +19,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
@@ -46,15 +42,17 @@ class BookshelfRepositoryImplTest {
         runTest {
             // GIVEN
             val listName = "Hardcover Fiction"
-            val jsonString = listResponse
+            val bookListResponseDto = mockBookListResponseDto
+
+
             coEvery { remoteDataSource.getBooksInListFromApi(listName) } returns Result.success(
-                jsonString
+                bookListResponseDto
             )
             coEvery { localDataSource.deleteListWithBooks(any()) } just Runs
             coEvery { localDataSource.insertListWithBooks(any()) } just Runs
 
             // WHEN
-            repository.refreshBookListInDBFromAPI(listName)
+            repository.refreshBookListInDbFromApi(listName)
 
             //THEN
             coVerify(exactly = 1) {
@@ -66,67 +64,39 @@ class BookshelfRepositoryImplTest {
     }
 
     @Test
-    fun `refreshBookListInDBFromAPI should not update database when API returns null`() {
-        runTest {
-            // GIVEN
-            val listName = "Hardcover Fiction"
-            coEvery { remoteDataSource.getBooksInListFromApi(listName) } returns Result.success(null)
+    fun `refreshBookListInDBFromAPI should not update database when API returns empty book list`() = runTest {
+        // GIVEN
+        val listName = "Hardcover Fiction"
+        coEvery { remoteDataSource.getBooksInListFromApi(listName) } returns Result.success(
+            mockEmptyBookListResponseDto
+        )
 
-            // WHEN
-            repository.refreshBookListInDBFromAPI(listName)
+        // WHEN
+        repository.refreshBookListInDbFromApi(listName)
 
-            // THEN
-            coVerify(exactly = 1) { remoteDataSource.getBooksInListFromApi(listName) }
-            coVerify(exactly = 0) {
-                localDataSource.deleteListWithBooks(any())
-                localDataSource.insertListWithBooks(any())
-            }
-        }
-    }
-
-
-    @Test
-    fun `refreshBookListInDBFromAPI should throw exception on API failure`() {
-        runTest {
-            // GIVEN
-            val listName = "Hardcover Fiction"
-            val errorMessage = "Network error"
-            coEvery { remoteDataSource.getBooksInListFromApi(listName) } returns Result.failure(Exception(errorMessage))
-
-            // WHEN THEN
-            try {
-                repository.refreshBookListInDBFromAPI(listName)
-                fail("Expected an exception but none was thrown")
-            } catch (e: IllegalStateException) {
-                assertTrue("Expected an exception but none was thrown", e.message?.contains(errorMessage) == true)
-            }
-
-            coVerify(exactly = 1) { remoteDataSource.getBooksInListFromApi(listName) }
-            coVerify(exactly = 0) {
-                localDataSource.deleteListWithBooks(any())
-                localDataSource.insertListWithBooks(any())
-            }
+        // THEN
+        coVerify(exactly = 1) { remoteDataSource.getBooksInListFromApi(listName) }
+        coVerify(exactly = 0) {
+            localDataSource.deleteListWithBooks(any())
+            localDataSource.insertListWithBooks(any())
         }
     }
 
     @Test
-    fun `refreshBookListInDBFromAPI should handle empty JSON response`() {
-        runTest {
-            // GIVEN
-            val listName = "Hardcover Fiction"
-            val emptyJsonString = "{}"
-            coEvery { remoteDataSource.getBooksInListFromApi(listName) } returns Result.success(emptyJsonString)
+    fun `refreshBookListInDBFromAPI should log error on API failure`() = runTest {
+        // GIVEN
+        val listName = "Hardcover Fiction"
+        val exception = Exception("Network Error")
+        coEvery { remoteDataSource.getBooksInListFromApi(listName) } returns Result.failure(exception)
 
-            // WHEN
-            repository.refreshBookListInDBFromAPI(listName)
+        // WHEN
+        repository.refreshBookListInDbFromApi(listName)
 
-            // THEN
-            coVerify(exactly = 1) { remoteDataSource.getBooksInListFromApi(listName) }
-            // Depending on how your method handles empty JSON, adjust these verifications
-            coVerify(exactly = 0) {
-                localDataSource.deleteListWithBooks(any())
-                localDataSource.insertListWithBooks(any())
-            }
+        // THEN
+        coVerify(exactly = 1) { remoteDataSource.getBooksInListFromApi(listName) }
+        coVerify(exactly = 0) {
+            localDataSource.deleteListWithBooks(any())
+            localDataSource.insertListWithBooks(any())
         }
     }
 
@@ -237,25 +207,25 @@ class BookshelfRepositoryImplTest {
             val result = repository.getBookReview(isbn13).first()
 
             // THEN
-            assertEquals(mockLocalReview, result)
+            assertEquals(Result.success(mockLocalReview), result)
             coVerify(exactly = 1) { localDataSource.getBookReview(isbn13) }
             coVerify(exactly = 0) { remoteDataSource.getBookReviewFromApi(any()) }
         }
     }
-
+//
     @Test
-    fun `getBookReview should emit null if remote review is null`() {
+    fun `getBookReview should emit failure if remote review is null`() {
         runTest {
             // GIVEN
             val isbn13 = "9780743273565"
             every { localDataSource.getBookReview(isbn13) } returns flowOf(null)
-            coEvery { remoteDataSource.getBookReviewFromApi(isbn13) } returns Result.success(null)
+            coEvery { remoteDataSource.getBookReviewFromApi(isbn13) } returns Result.failure(Exception())
 
             // WHEN
             val result = repository.getBookReview(isbn13).first()
 
             // THEN
-            assertNull(result)
+            assertTrue(result.isFailure)
             coVerify(exactly = 1) {
                 localDataSource.getBookReview(isbn13)
                 remoteDataSource.getBookReviewFromApi(isbn13)
@@ -265,18 +235,20 @@ class BookshelfRepositoryImplTest {
     }
 
     @Test
-    fun `getBookReview should emit null if remote review fetch fails`() {
+    fun `getBookReview should emit failure if remote review fetch fails`() {
         runTest {
             // GIVEN
             val isbn13 = "9780743273565"
+            val networkError = IOException("Network error")
             every { localDataSource.getBookReview(isbn13) } returns flowOf(null)
-            coEvery { remoteDataSource.getBookReviewFromApi(isbn13) } returns Result.failure(IOException("Network error"))
+            coEvery { remoteDataSource.getBookReviewFromApi(isbn13) } returns Result.failure(networkError)
 
             // WHEN
             val result = repository.getBookReview(isbn13).first()
 
             // THEN
-            assertNull(result)
+            assertTrue(result.isFailure)
+            assertEquals(networkError, result.exceptionOrNull())
             coVerify(exactly = 1) {
                 localDataSource.getBookReview(isbn13)
                 remoteDataSource.getBookReviewFromApi(isbn13)
@@ -298,7 +270,7 @@ class BookshelfRepositoryImplTest {
 
             // THEN
             try {
-                val book = result.first()
+                result.first()
             } catch (e: Exception) {
                 assertEquals("Unexpected error", e.message)
             }
