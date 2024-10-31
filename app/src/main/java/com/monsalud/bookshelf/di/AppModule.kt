@@ -30,10 +30,18 @@ import org.koin.dsl.module
 val appModule = module {
     val moduleInstance = AppModule()
 
+    fun provideDatabase(application: Application): BookshelfDatabase {
+        return Room.databaseBuilder(
+            application,
+            BookshelfDatabase::class.java,
+            AppModule.BOOKSHELF_DATABASE
+        ).build()
+    }
+
     fun provideBookListDao(database: BookshelfDatabase) = database.bookListDao()
     fun provideBookReviewDao(database: BookshelfDatabase) = database.bookReviewDao()
 
-    single { BookshelfDatabase.getDatabase(androidApplication()) } bind BookshelfDatabase::class
+    single { provideDatabase(androidApplication()) } bind BookshelfDatabase::class
     single {
         provideBookListDao(
             database = get()
@@ -95,6 +103,7 @@ class AppModule {
     }
 
     companion object {
+        const val BOOKSHELF_DATABASE = "bookshelf_database"
         const val TIMEOUT = 10_000
     }
 }

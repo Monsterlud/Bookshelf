@@ -1,5 +1,6 @@
 package com.monsalud.bookshelf.presentation.screens.listscreen
 
+import androidx.datastore.preferences.protobuf.ListValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
@@ -23,16 +25,11 @@ class BookshelfListViewModel(
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
-    val isLoading = _isLoading.asStateFlow()
-
     private val _isLoadingPreferences = MutableStateFlow(true)
-    val isLoadingPreferences: StateFlow<Boolean> = _isLoadingPreferences.asStateFlow()
-
     private val _bookListFlow = MutableStateFlow<ListWithBooks?>(null)
-    val bookListFlow = _bookListFlow.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val userPreferencesFlow: StateFlow<BookshelfDataStore.UserPreferences> = flow {
+    private val _userPreferencesFlow: StateFlow<BookshelfDataStore.UserPreferences> = flow {
         emit(repository.getUserPreferencesFlow())
     }.onEach { _isLoadingPreferences.value = false }
         .flatMapLatest { it }
@@ -44,6 +41,28 @@ class BookshelfListViewModel(
             )
         )
 
+    val uiState: StateFlow<BookListState> = combine(
+        _bookListFlow,
+        _isLoading,
+        _isLoadingPreferences,
+        _userPreferencesFlow,
+    ) { bookList, isLoading, isLoadingPreferences, userPreferences ->
+        if (isLoading) {
+            BookListState.Loading
+        } else {
+            BookListState.Success(
+                bookList = bookList,
+                isLoading = isLoading,
+                isLoadingPreferences = isLoadingPreferences,
+                userPreferences = userPreferences,
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = BookListState.Loading
+    )
+
     init {
         viewModelScope.launch {
             _isLoading.value = false
@@ -52,11 +71,14 @@ class BookshelfListViewModel(
 
     fun setListName(newListName: String) {
         viewModelScope.launch {
+            Timber.d("setListName called with listName: $newListName")
             if (!repository.hasDataForList(newListName)) {
+                Timber.d("hasDataForList returned false, refreshing book list")
                 refreshBookList(newListName)
             }
             repository.getListWithBooks(newListName)
                 .collect { listWithBooks ->
+                    Timber.d("Received listWithBooks from repository: $listWithBooks")
                     _bookListFlow.value = listWithBooks
                 }
         }
@@ -75,4 +97,21 @@ class BookshelfListViewModel(
             repository.updateHasSeenOnboardingDialog(hasSeen)
         }
     }
+}
+
+sealed class BookListState {
+    data class Success(
+        val bookList: ListWithBooks?,
+        val isLoading: Boolean,
+        val isLoadingPreferences: Boolean,
+        val userPreferences: BookshelfDataStore.UserPreferences,
+    ) : BookListState()
+
+    data object Loading : BookListState()
+    data object Empty : BookListState()
+    data class Error(
+        val message: String,
+        val bookList: ListWithBooks? = null,
+        ) : BookListState()
+
 }

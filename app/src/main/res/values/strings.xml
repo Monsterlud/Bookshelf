@@ -48,7 +48,6 @@
 
     // Bookshelf List Screen
     <string name="list_subtitle">A New York Times Best Seller List</string>
-    <string name="no_data_available">No Data Available</string>
 
     // Bookshelf Detail Screen
     <string name="initial_state">Initial State</string>

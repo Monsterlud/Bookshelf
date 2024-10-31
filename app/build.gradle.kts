@@ -67,6 +67,7 @@ dependencies {
 
     // Google
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.swiperefresh)
 
     // UI
     implementation(platform(libs.androidx.compose.bom))
