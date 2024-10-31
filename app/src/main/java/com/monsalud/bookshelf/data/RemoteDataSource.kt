@@ -1,5 +1,8 @@
 package com.monsalud.bookshelf.data
 
+import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDto
+import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDto
+
 interface RemoteDataSource {
 
     /** Remote DataSource Operations */
@@ -12,7 +15,7 @@ interface RemoteDataSource {
      *         (likely JSON) if successful, or an error if the API call fails.
      *         The String can be null if the API returns no data.
      */
-    suspend fun getBooksInListFromApi(list: String): Result<String?>
+    suspend fun getBooksInListFromApi(list: String): Result<BookListResponseDto>
 
     /**
      * Fetches a book review from the remote API for a specific book.
@@ -22,5 +25,5 @@ interface RemoteDataSource {
      *         (likely JSON) if successful, or an error if the API call fails.
      *         The String can be null if no review is found for the given ISBN.
      */
-    suspend fun getBookReviewFromApi(isbn: String): Result<String?>
+    suspend fun getBookReviewFromApi(isbn: String): Result<BookReviewResponseDto>
 }

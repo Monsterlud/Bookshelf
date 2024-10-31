@@ -103,6 +103,9 @@ dependencies {
     implementation(libs.ktor.core)
     implementation(libs.ktor.android)
     implementation(libs.ktor.serialization)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.json)
+    implementation(libs.ktor.client.okhttp)
 
     // Debug
     debugImplementation(libs.androidx.ui.tooling)

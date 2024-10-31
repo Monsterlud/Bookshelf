@@ -29,18 +29,17 @@ class BookshelfReviewViewModel(
         viewModelScope.launch {
             Timber.d("Fetching book review for ISBN13: $isbn13")
             _bookReviewState.value = BookReviewState.Loading
-            try {
-                repository.getBookReview(isbn13).collect { review ->
-                    _bookReviewState.value = if (review != null) {
-                        BookReviewState.Success(review)
+
+            repository.getBookReview(isbn13).collect { result ->
+                result.onSuccess {
+                    _bookReviewState.value = if (it != null) {
+                        BookReviewState.Success(it)
                     } else {
                         BookReviewState.NoReview
                     }
+                }.onFailure {
+                    _bookReviewState.value = BookReviewState.Error
                 }
-            } catch (e: Exception) {
-                Timber.e(e, "Error fetching book review")
-                _bookReviewState.value =
-                    BookReviewState.Error(e.message ?: "Error fetching book review")
             }
         }
     }
@@ -51,5 +50,5 @@ sealed class BookReviewState {
     data object Loading : BookReviewState()
     data class Success(val review: BookReviewEntity) : BookReviewState()
     data object NoReview : BookReviewState()
-    data class Error(val message: String) : BookReviewState()
+    data object Error : BookReviewState()
 }

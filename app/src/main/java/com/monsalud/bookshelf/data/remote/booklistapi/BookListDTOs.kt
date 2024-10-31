@@ -2,55 +2,55 @@ package com.monsalud.bookshelf.data.remote.booklistapi
 
 import com.monsalud.bookshelf.data.local.room.BookEntity
 import com.monsalud.bookshelf.data.local.room.BookListEntity
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 
 /** DTOs to handle Books List API data */
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class BookListResponseDto(
-    @Json(name = "status") val status: String,
-    @Json(name = "copyright") val copyright: String,
-    @Json(name = "num_results") val numResults: Int,
-    @Json(name = "last_modified") val lastModified: String,
-    @Json(name = "results") val results: BookListResultDto
+    @SerialName("status") val status: String,
+    @SerialName("copyright") val copyright: String,
+    @SerialName("num_results") val numResults: Int,
+    @SerialName("last_modified") val lastModified: String,
+    @SerialName("results") val results: BookListResultDto
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class BookListResultDto(
-    @Json(name = "list_name") val listName: String,
-    @Json(name = "bestsellers_date") val bestsellersDate: String,
-    @Json(name = "published_date") val publishedDate: String,
-    @Json(name = "display_name") val displayName: String,
-    @Json(name = "normal_list_ends_at") val normalListEndsAt: Int,
-    @Json(name = "updated") val updated: String,
-    @Json(name = "books") val books: List<BookDto>
+    @SerialName("list_name") val listName: String,
+    @SerialName("bestsellers_date") val bestsellersDate: String,
+    @SerialName("published_date") val publishedDate: String,
+    @SerialName("display_name") val displayName: String,
+    @SerialName("normal_list_ends_at") val normalListEndsAt: Int,
+    @SerialName("updated") val updated: String,
+    @SerialName("books") val books: List<BookDto>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class BookDto(
-    @Json(name = "rank") val rank: Int,
-    @Json(name = "rank_last_week") val rankLastWeek: Int,
-    @Json(name = "weeks_on_list") val weeksOnList: Int,
-    @Json(name = "asterisk") val asterisk: Int,
-    @Json(name = "dagger") val dagger: Int,
-    @Json(name = "primary_isbn10") val primaryIsbn10: String,
-    @Json(name = "primary_isbn13") val primaryIsbn13: String,
-    @Json(name = "publisher") val publisher: String,
-    @Json(name = "description") val description: String,
-    @Json(name = "price") val price: Int,
-    @Json(name = "title") val title: String,
-    @Json(name = "author") val author: String,
-    @Json(name = "contributor") val contributor: String,
-    @Json(name = "contributor_note") val contributorNote: String,
-    @Json(name = "book_image") val bookImage: String,
-    @Json(name = "amazon_product_url") val amazonProductUrl: String,
-    @Json(name = "age_group") val ageGroup: String,
-    @Json(name = "book_review_link") val bookReviewLink: String,
-    @Json(name = "first_chapter_link") val firstChapterLink: String,
-    @Json(name = "sunday_review_link") val sundayReviewLink: String,
-    @Json(name = "article_chapter_link") val articleChapterLink: String,
+    @SerialName("rank") val rank: Int,
+    @SerialName("rank_last_week") val rankLastWeek: Int,
+    @SerialName("weeks_on_list") val weeksOnList: Int,
+    @SerialName("asterisk") val asterisk: Int,
+    @SerialName("dagger") val dagger: Int,
+    @SerialName("primary_isbn10") val primaryIsbn10: String,
+    @SerialName("primary_isbn13") val primaryIsbn13: String,
+    @SerialName("publisher") val publisher: String,
+    @SerialName("description") val description: String,
+    @SerialName("price") val price: String,
+    @SerialName("title") val title: String,
+    @SerialName("author") val author: String,
+    @SerialName("contributor") val contributor: String,
+    @SerialName("contributor_note") val contributorNote: String,
+    @SerialName("book_image") val bookImage: String,
+    @SerialName("amazon_product_url") val amazonProductUrl: String,
+    @SerialName("age_group") val ageGroup: String,
+    @SerialName("book_review_link") val bookReviewLink: String,
+    @SerialName("first_chapter_link") val firstChapterLink: String,
+    @SerialName("sunday_review_link") val sundayReviewLink: String,
+    @SerialName("article_chapter_link") val articleChapterLink: String,
 )
 
 fun BookListResultDto.toBookListEntity() = BookListEntity(
@@ -85,4 +85,20 @@ fun BookDto.toBookEntity(listName: String) = BookEntity(
     sundayReviewLink = sundayReviewLink,
     articleChapterLink = articleChapterLink,
     listName = listName
+)
+
+@Serializable
+data class BookListErrorResponse(
+    @SerialName("fault") val fault: Fault?
+)
+
+@Serializable
+data class Fault(
+    @SerialName("faultstring") val faultString: String?,
+    @SerialName("detail") val detail: FaultDetail?
+)
+
+@Serializable
+data class FaultDetail(
+    @SerialName("errorcode") val errorCode: String?
 )

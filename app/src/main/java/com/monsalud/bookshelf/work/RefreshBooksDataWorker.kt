@@ -20,15 +20,15 @@ class RefreshBooksDataWorker(
     override suspend fun doWork(): Result {
 
         return try {
-            repository.refreshBookListInDBFromAPI("Hardcover Fiction")
-            repository.refreshBookListInDBFromAPI("Hardcover Nonfiction")
-            repository.refreshBookListInDBFromAPI("Culture")
-            repository.refreshBookListInDBFromAPI("Food and Fitness")
-            repository.refreshBookListInDBFromAPI("Graphic Books and Manga")
-            repository.refreshBookListInDBFromAPI("Hardcover Political Books")
-            repository.refreshBookListInDBFromAPI("Science")
-            repository.refreshBookListInDBFromAPI("Sports")
-            repository.refreshBookListInDBFromAPI("Travel")
+            repository.refreshBookListInDbFromApi("Hardcover Fiction")
+            repository.refreshBookListInDbFromApi("Hardcover Nonfiction")
+            repository.refreshBookListInDbFromApi("Culture")
+            repository.refreshBookListInDbFromApi("Food and Fitness")
+            repository.refreshBookListInDbFromApi("Graphic Books and Manga")
+            repository.refreshBookListInDbFromApi("Hardcover Political Books")
+            repository.refreshBookListInDbFromApi("Science")
+            repository.refreshBookListInDbFromApi("Sports")
+            repository.refreshBookListInDbFromApi("Travel")
             return Result.success()
         } catch (e: Exception) {
             Result.retry()

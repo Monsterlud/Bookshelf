@@ -17,7 +17,7 @@
     <string name="list_title_fiction">Fiction</string>
     <string name="list_name_fiction">Hardcover Fiction</string>
     <string name="list_title_nonfiction">Non-Fiction</string>
-    <string name="list_name_nonfiction">Hardcover Non-Fiction</string>
+    <string name="list_name_nonfiction">Hardcover Nonfiction</string>
     <string name="list_title_culture">Culture</string>
     <string name="list_name_culture">Culture</string>
     <string name="list_title_food_and_diet">Food and Diet</string>
@@ -55,6 +55,6 @@
     <string name="read_the_full_new_york_times_review">Read the full New York Times review</string>
     <string name="no_review_available_for_this_book">No review available for this book</string>
     <string name="buy_this_book_on_amazon">Buy this book on Amazon</string>
-    <string name="error_loading_review">Error loading review: %1$s</string>
+    <string name="error_loading_review">Error loading review</string>
 
 </resources>

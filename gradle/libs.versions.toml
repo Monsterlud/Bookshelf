@@ -13,7 +13,7 @@ navigationRuntimeKtx = "2.7.7"
 navigationCompose = "2.8.0-beta04"
 koin = "3.4.0"
 room = "2.6.1"
-ktor = "1.6.3"
+ktor = "2.3.10"
 timber = "5.0.1"
 junit = "4.13.2"
 mockk = "1.13.11"
@@ -79,6 +79,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
 ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # Debug
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling-preview" }

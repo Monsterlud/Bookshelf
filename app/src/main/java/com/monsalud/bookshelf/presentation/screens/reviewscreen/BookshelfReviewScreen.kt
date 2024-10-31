@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -85,7 +87,7 @@ fun BookshelfReviewScreen(
                     .build(),
                 contentDescription = stringResource(id = R.string.book_image_description, title),
                 placeholder = null,
-                error = painterResource(id = R.drawable.error_image),
+                error = painterResource(id = R.drawable.blank_book),
                 modifier = Modifier
                     .size(300.dp)
                     .padding(MaterialTheme.spacing.medium)
@@ -115,7 +117,7 @@ fun BookshelfReviewScreen(
                     )
                 }
 
-                BookReviewState.Initial -> {
+                is BookReviewState.Initial -> {
                     Text(
                         text = stringResource(id = R.string.initial_state),
                         style = MaterialTheme.typography.headlineSmall,
@@ -127,29 +129,40 @@ fun BookshelfReviewScreen(
                 is BookReviewState.Success -> {
                     val review = state.review
 
-                    Text(
-                        text = stringResource(id = R.string.read_the_full_new_york_times_review),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = if (isSystemInDarkTheme()) Color.White else Color.Blue,
-                        modifier = Modifier
-                            .padding(MaterialTheme.spacing.medium)
-                            .clickable {
-                                Timber.d("Opening book review link: ${review.url}")
-                                uriHandler.openUri(review.url)
-                            }
-                    )
+                    Timber.d("Review URL: ${review.url}")
+                    if (review.url.isEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.no_review_available_for_this_book),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            modifier = Modifier
+                                .padding(MaterialTheme.spacing.medium)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.read_the_full_new_york_times_review),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (isSystemInDarkTheme()) Color.White else Color.Blue,
+                            modifier = Modifier
+                                .padding(MaterialTheme.spacing.medium)
+                                .clickable {
+                                    Timber.d("Opening book review link: ${review.url}")
+                                    uriHandler.openUri(review.url)
+                                }
+                        )
+                    }
                 }
 
                 is BookReviewState.Error -> {
                     Text(
-                        text = stringResource(id = R.string.error_loading_review, state.message),
+                        text = stringResource(id = R.string.error_loading_review),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(MaterialTheme.spacing.medium)
                     )
                 }
 
-                BookReviewState.NoReview -> {
+                is BookReviewState.NoReview -> {
                     Text(
                         text = stringResource(id = R.string.no_review_available_for_this_book),
                         style = MaterialTheme.typography.bodyLarge,

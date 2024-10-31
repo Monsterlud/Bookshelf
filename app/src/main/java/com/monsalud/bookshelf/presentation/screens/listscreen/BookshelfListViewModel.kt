@@ -65,13 +65,8 @@ class BookshelfListViewModel(
     private fun refreshBookList(listName: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            try {
-                repository.refreshBookListInDBFromAPI(listName)
-            } catch (e: Exception) {
-                Timber.e(e, "Error refreshing book list")
-            } finally {
-                _isLoading.value = false
-            }
+            repository.refreshBookListInDbFromApi(listName)
+            _isLoading.value = false
         }
     }
 

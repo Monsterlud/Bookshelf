@@ -42,7 +42,7 @@ data class BookEntity(
     val primaryIsbn10: String,
     val publisher: String,
     val description: String,
-    val price: Int,
+    val price: String,
     val title: String,
     val author: String,
     val contributor: String,

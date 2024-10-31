@@ -1,12 +1,11 @@
 package com.monsalud.bookshelf.data
 
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
+import com.monsalud.bookshelf.data.local.room.BookEntity
+import com.monsalud.bookshelf.data.local.room.BookListEntity
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
-import com.monsalud.bookshelf.data.remote.booklistapi.BookListResponseDto
-import com.monsalud.bookshelf.data.remote.booklistapi.toBookEntity
-import com.monsalud.bookshelf.data.remote.booklistapi.toBookListEntity
-import com.monsalud.bookshelf.data.remote.bookreviewapi.BookReviewResponseDto
+import com.monsalud.bookshelf.data.remote.bookreviewapi.toBookReviewEntity
 import com.monsalud.bookshelf.domain.BookshelfRepository
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.flow.Flow
@@ -21,30 +20,61 @@ class BookshelfRepositoryImpl(
     private val moshi: Moshi,
 ) : BookshelfRepository {
 
-    override suspend fun refreshBookListInDBFromAPI(listName: String) {
-        try {
-            val result = remoteDataSource.getBooksInListFromApi(listName)
-            result.onSuccess { jsonString ->
-                Timber.d("Received JSON String: $jsonString")
-                if (jsonString != null) {
-                    try {
-                        val listWithBooks = parseBookListJsonToListWithBooks(jsonString)
-                        Timber.d("Parsed JSON String to ListWithBooks: $listWithBooks")
-                        localDataSource.deleteListWithBooks(listName)
-                        localDataSource.insertListWithBooks(listWithBooks)
-                    } catch (e: Exception) {
-                        Timber.d("Error parsing JSON String: ${e.message}")
-                    }
+    /** Bookshelf List Repository Functions */
+
+    override suspend fun refreshBookListInDbFromApi(listName: String) {
+
+        remoteDataSource.getBooksInListFromApi(listName)
+            .map { bookListResponseDto ->
+                val bookListResultDto = bookListResponseDto.results
+
+                val bookListEntity = BookListEntity(
+                    listName = bookListResultDto.listName,
+                    bestsellersDate = bookListResultDto.bestsellersDate,
+                    publishedDate = bookListResultDto.publishedDate,
+                    displayName = bookListResultDto.displayName,
+                    normalListEndsAt = bookListResultDto.normalListEndsAt,
+                    updated = bookListResultDto.updated,
+                )
+
+                val bookEntities = bookListResponseDto.results.books.map { bookDto ->
+                    BookEntity(
+                        primaryIsbn13 = bookDto.primaryIsbn13,
+                        listName = bookListResultDto.listName,
+                        rank = bookDto.rank,
+                        rankLastWeek = bookDto.rankLastWeek,
+                        weeksOnList = bookDto.weeksOnList,
+                        asterisk = bookDto.asterisk,
+                        dagger = bookDto.dagger,
+                        primaryIsbn10 = bookDto.primaryIsbn10,
+                        publisher = bookDto.publisher,
+                        description = bookDto.description,
+                        price = bookDto.price,
+                        title = bookDto.title,
+                        author = bookDto.author,
+                        contributor = bookDto.contributor,
+                        contributorNote = bookDto.contributorNote,
+                        bookImage = bookDto.bookImage,
+                        amazonProductUrl = bookDto.amazonProductUrl,
+                        ageGroup = bookDto.ageGroup,
+                        bookReviewLink = bookDto.bookReviewLink,
+                        firstChapterLink = bookDto.firstChapterLink,
+                        sundayReviewLink = bookDto.sundayReviewLink,
+                        articleChapterLink = bookDto.articleChapterLink,
+                    )
                 }
+
+                ListWithBooks(bookListEntity, bookEntities)
+
             }
-            result.onFailure {
-                Timber.e("Error fetching book list: ${it.message}")
-                throw IllegalStateException("Error fetching book list: ${it.message}")
+            .onSuccess { listWithBooks ->
+                localDataSource.deleteListWithBooks(listName)
+                localDataSource.insertListWithBooks(listWithBooks)
+                Timber.d("Successfully refreshed $listName list in Database")
             }
-        } catch (e: Exception) {
-            Timber.e("Error fetching book list: ${e.message}")
-            throw IllegalStateException("Error fetching book list: ${e.message}")
-        }
+            .onFailure { error ->
+                Timber.e("Error refreshing $listName list in Database: ${error.message}")
+            }
     }
 
     override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks?> {
@@ -55,19 +85,28 @@ class BookshelfRepositoryImpl(
         return localDataSource.getListWithBooks(listName).first() != null
     }
 
-    override suspend fun getBookReview(isbn13: String) : Flow<BookReviewEntity?> {
+    /** Book Review Repository Functions */
+
+    override suspend fun getBookReview(isbn: String): Flow<Result<BookReviewEntity?>> {
         return flow {
-            Timber.d("Fetching book review from DB for ISBN: $isbn13")
-            val localBookReview = localDataSource.getBookReview(isbn13).first()
+            Timber.d("Fetching book review from DB for ISBN: $isbn")
+            val localBookReview = localDataSource.getBookReview(isbn).first()
             if (localBookReview != null && !shouldReplaceOldReview(localBookReview)) {
-                Timber.d("Using cached book review for ISBN: $isbn13")
-                emit(localBookReview)
+                Timber.d("Using cached book review for ISBN: $isbn")
+                emit(Result.success(localBookReview))
             } else {
-                val remoteBookReview = fetchAndSaveReview(isbn13)
-                emit(remoteBookReview)
+                fetchAndSaveReview(isbn)
+                    .onSuccess {
+                        emit(Result.success(it))
+                    }
+                    .onFailure {
+                        emit(Result.failure(it))
+                    }
             }
         }
     }
+
+    /** User Preferences Repository Functions */
 
     override suspend fun getUserPreferencesFlow(): Flow<BookshelfDataStore.UserPreferences> {
         return localDataSource.getUserPreferencesFlow()
@@ -80,49 +119,23 @@ class BookshelfRepositoryImpl(
 
     /** Private Helper Functions */
 
-    private fun parseBookListJsonToListWithBooks(jsonString: String): ListWithBooks {
-        val adapter = moshi.adapter(BookListResponseDto::class.java)
-        val apiResponse =
-            adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
-        val bookListEntity = apiResponse.results.toBookListEntity()
-        val bookEntities =
-            apiResponse.results.books.map { it.toBookEntity(apiResponse.results.listName) }
-
-        return ListWithBooks(bookListEntity, bookEntities)
-    }
-
-    private fun parseBookReviewJsonToBookReviewEntity(jsonString: String): BookReviewEntity? {
-        val adapter = moshi.adapter(BookReviewResponseDto::class.java)
-        val apiResponse =
-            adapter.fromJson(jsonString) ?: throw IllegalArgumentException("Invalid JSON string")
-        if (apiResponse.results.isEmpty()) {
-            Timber.d("No results found in the API response")
-            return null
-        }
-        val bookReviewDTO = apiResponse.results.first()
-        return BookReviewEntity(
-            bookIsbn13 = bookReviewDTO.isbn13.firstOrNull() ?: "",
-            url = bookReviewDTO.url,
-            publicationDt = bookReviewDTO.publication_dt,
-            byline = bookReviewDTO.byline,
-            bookTitle = bookReviewDTO.book_title,
-            bookAuthor = bookReviewDTO.book_author,
-            summary = bookReviewDTO.summary
-        )
-    }
-
-    private suspend fun fetchAndSaveReview(isbn13: String) : BookReviewEntity? {
-        val result = remoteDataSource.getBookReviewFromApi(isbn13)
-        Timber.d("Fetching book review from API for ISBN: $isbn13")
-        Timber.d("API Response: ${result.getOrNull()}")
-        return result.getOrNull()?.let { jsonString ->
-            parseBookReviewJsonToBookReviewEntity(jsonString)?.also {
-                localDataSource.insertBookReview(it)
+    private suspend fun fetchAndSaveReview(isbn13: String): Result<BookReviewEntity?> {
+        remoteDataSource.getBookReviewFromApi(isbn13)
+            .map { bookReviewResponseDto ->
+                val bookReviewDto = bookReviewResponseDto.results.firstOrNull()
+                val bookReviewEntity = bookReviewDto?.toBookReviewEntity()
+                bookReviewEntity?.let {
+                    localDataSource.insertBookReview(it)
+                }
+                bookReviewEntity
             }
-        }
+            .fold(
+                onSuccess = { return Result.success(it) },
+                onFailure = { return Result.failure(it) }
+            )
     }
 
-    private fun shouldReplaceOldReview(review: BookReviewEntity) : Boolean {
+    private fun shouldReplaceOldReview(review: BookReviewEntity): Boolean {
         val oneDayAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)
         return review.timestamp < oneDayAgo
     }

@@ -18,9 +18,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.observer.ResponseObserver
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -77,20 +77,16 @@ val appModule = module {
 class AppModule {
 
     fun ktorClient() = HttpClient(Android) {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(
+        install(ContentNegotiation) {
+            json(
                 Json {
                     prettyPrint = true
                     isLenient = true
                     ignoreUnknownKeys = true
                     encodeDefaults = true
+                    explicitNulls = false
                 }
             )
-        }
-        install(ResponseObserver) {
-            onResponse { response ->
-                Log.i("KOIN", "${response.status.value}")
-            }
         }
         engine {
             connectTimeout = TIMEOUT
@@ -99,7 +95,6 @@ class AppModule {
     }
 
     companion object {
-        const val BOOKSHELF_DATABASE = "bookshelf_database"
         const val TIMEOUT = 10_000
     }
 }

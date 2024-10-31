@@ -64,7 +64,7 @@ fun BookItem(
                     .build(),
                 contentDescription = stringResource(id = R.string.book_image_description, book.title) ,
                 placeholder = null,
-                error = painterResource(id = R.drawable.error_image),
+                error = painterResource(id = R.drawable.blank_book),
                 modifier = Modifier
                     .size(120.dp)
                     .padding(end = MaterialTheme.spacing.medium),
@@ -121,7 +121,7 @@ fun BookItemPreview() {
             primaryIsbn13 = "9780593449592",
             publisher = "Random House",
             description = "A man in search of the father he never knew encounters a single mom and rumors circulate of the nearby appearance of a white deer.",
-            price = 0,
+            price = "0.00",
             title = "COUNTING MIRACLES",
             author = "Nicholas Sparks",
             contributor = "by Nicholas Sparks",

@@ -4,6 +4,7 @@ import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.BookReviewEntity
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
 import kotlinx.coroutines.flow.Flow
+import kotlin.Result
 
 interface BookshelfRepository {
 
@@ -14,7 +15,7 @@ interface BookshelfRepository {
      *
      * @param listName The name of the list to refresh.
      */
-    suspend fun refreshBookListInDBFromAPI(listName: String)
+    suspend fun refreshBookListInDbFromApi(listName: String)
 
     /**
      * Retrieves a list with its associated books, either from the local database or remote API.
@@ -39,7 +40,7 @@ interface BookshelfRepository {
      * @param isbn The ISBN of the book to get the review for.
      * @return A Flow emitting the BookReviewEntity or null if no review is found.
      */
-    suspend fun getBookReview(isbn: String) : Flow<BookReviewEntity?>
+    suspend fun getBookReview(isbn: String) : Flow<Result<BookReviewEntity?>>
 
 
     /** User Preferences Operations */
