@@ -140,15 +140,14 @@ fun BookshelfListScreen(
                                 modifier = Modifier.testTag("refreshMessage")
                             )
                         }
-
-                        if (showOnboardingDialog) {
-                            OnboardingDialog(
-                                onDismiss = {
-                                    viewModel.updateHasSeenOnboardingDialog(true)
-                                }
-                            )
-                        }
                     }
+                }
+                if (showOnboardingDialog) {
+                    OnboardingDialog(
+                        onDismiss = {
+                            viewModel.updateHasSeenOnboardingDialog(true)
+                        }
+                    )
                 }
             }
         }
