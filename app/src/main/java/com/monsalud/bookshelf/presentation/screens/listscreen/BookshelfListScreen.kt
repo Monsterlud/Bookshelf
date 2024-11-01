@@ -4,17 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.pullToRefresh
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,7 +40,6 @@ import com.monsalud.bookshelf.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfListScreen(
     listName: String,
@@ -47,9 +47,7 @@ fun BookshelfListScreen(
 ) {
     val viewModel: BookshelfListViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val showOnboardingDialog by viewModel.showOnboarding.collectAsStateWithLifecycle()
-    val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -57,7 +55,7 @@ fun BookshelfListScreen(
     }
 
     LaunchedEffect(uiState) {
-        if (uiState is BookListState.Success) {
+        if (uiState is BookListState.Success || uiState is BookListState.Error) {
             isRefreshing = false
         }
     }
@@ -72,7 +70,8 @@ fun BookshelfListScreen(
             onRefresh = {
                 isRefreshing = true
                 viewModel.syncAndObserveBookList(listName, true)
-            }) {
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -81,7 +80,6 @@ fun BookshelfListScreen(
                 TitleSection(listName = listName)
 
                 when (val state = uiState) {
-
                     is BookListState.Success -> {
                         if (state.bookList != null) {
                             LazyColumn(
@@ -115,42 +113,42 @@ fun BookshelfListScreen(
                     }
 
                     is BookListState.Refreshing -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .testTag("loadingIndicator")
-                                    .padding(MaterialTheme.spacing.medium)
-                                    .size(50.dp)
-                            )
-                        }
+                        // Swipe refresh handles loading indicator
                     }
 
                     is BookListState.Error -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Text(
                                 text = state.message,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.error,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .padding(MaterialTheme.spacing.medium)
-                                    .testTag("errorMessage")
+                                modifier = Modifier.testTag("errorMessage")
+                            )
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                            Text(
+                                text = "Pull down to refresh",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.testTag("refreshMessage")
+                            )
+                        }
+
+                        if (showOnboardingDialog) {
+                            OnboardingDialog(
+                                onDismiss = {
+                                    viewModel.updateHasSeenOnboardingDialog(true)
+                                }
                             )
                         }
                     }
-                }
-                if (showOnboardingDialog) {
-                    OnboardingDialog(
-                        onDismiss = {
-                            viewModel.updateHasSeenOnboardingDialog(true)
-                        }
-                    )
                 }
             }
         }
