@@ -7,12 +7,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monsalud.bookshelf.data.local.datastore.BookshelfDataStore
 import com.monsalud.bookshelf.data.local.room.ListWithBooks
+import com.monsalud.bookshelf.presentation.screens.listscreen.BookListState
 import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListViewModel
 import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListScreen
 import com.monsalud.bookshelf.ui.theme.BookshelfTheme
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -51,7 +53,20 @@ class BookShelfLIstScreenTest {
 
     @Test
     fun testInitialLoadingState() {
-        every { mockViewModel.isLoading } returns MutableStateFlow(true)
+        val uiState = MutableStateFlow<BookListState>(BookListState.Loading)
+        val showOnboarding = MutableStateFlow(false)
+
+        every { mockViewModel.uiState } returns uiState.asStateFlow()
+        every { mockViewModel.showOnboarding } returns showOnboarding.asStateFlow()
+
+        composeTestRule.setContent {
+            BookshelfTheme(darkTheme = false) {
+                BookshelfListScreen(
+                    listName = "Hardcover Fiction",
+                    onBookClick = { },
+                )
+            }
+        }
 
         composeTestRule.onNodeWithTag("loadingIndicator").assertExists()
     }
@@ -61,10 +76,13 @@ class BookShelfLIstScreenTest {
         val mockBook = mockBookEntity
         val mockList = ListWithBooks( mockBookListEntity, listOf(mockBook))
 
-        every { mockViewModel.bookListFlow } returns MutableStateFlow(mockList)
-        every { mockViewModel.isLoading } returns MutableStateFlow(false)
-        every { mockViewModel.userPreferencesFlow } returns MutableStateFlow(BookshelfDataStore.UserPreferences(hasSeenOnboardingDialog = true))
-        every { mockViewModel.isLoadingPreferences } returns MutableStateFlow(false)
+        val uiState = MutableStateFlow<BookListState>(
+            BookListState.Success(bookList = mockList)
+        )
+        val showOnboarding = MutableStateFlow(false)
+
+        every { mockViewModel.uiState } returns uiState.asStateFlow()
+        every { mockViewModel.showOnboarding } returns showOnboarding.asStateFlow()
 
         composeTestRule.setContent {
             BookshelfTheme(darkTheme = false) {

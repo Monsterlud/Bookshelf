@@ -4,7 +4,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookReviewState
-import com.monsalud.bookshelf.presentation.screens.listscreen.BookshelfListViewModel
 import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookshelfReviewScreen
 import com.monsalud.bookshelf.presentation.screens.reviewscreen.BookshelfReviewViewModel
 import io.mockk.every
