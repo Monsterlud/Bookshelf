@@ -22,63 +22,76 @@ class BookshelfRepositoryImpl(
 
     /** Bookshelf List Repository Functions */
 
-    override suspend fun refreshBookListInDbFromApi(listName: String) {
+    override suspend fun refreshBookListInDbFromApi(listName: String): Result<Unit> {
+        return try {
+            remoteDataSource.getBooksInListFromApi(listName)
+                .map { bookListResponseDto ->
+                    val bookListResultDto = bookListResponseDto.results
 
-        remoteDataSource.getBooksInListFromApi(listName)
-            .map { bookListResponseDto ->
-                val bookListResultDto = bookListResponseDto.results
+                    if (bookListResultDto.books.isEmpty()) {
+                        return Result.failure(Exception("No books found for list: $listName"))
+                    }
 
-                if (bookListResultDto.books.isEmpty()) {
-                    return
-                }
-
-                val bookListEntity = BookListEntity(
-                    listName = bookListResultDto.listName,
-                    bestsellersDate = bookListResultDto.bestsellersDate,
-                    publishedDate = bookListResultDto.publishedDate,
-                    displayName = bookListResultDto.displayName,
-                    normalListEndsAt = bookListResultDto.normalListEndsAt,
-                    updated = bookListResultDto.updated,
-                )
-
-                val bookEntities = bookListResponseDto.results.books.map { bookDto ->
-                    BookEntity(
-                        primaryIsbn13 = bookDto.primaryIsbn13,
+                    val bookListEntity = BookListEntity(
                         listName = bookListResultDto.listName,
-                        rank = bookDto.rank,
-                        rankLastWeek = bookDto.rankLastWeek,
-                        weeksOnList = bookDto.weeksOnList,
-                        asterisk = bookDto.asterisk,
-                        dagger = bookDto.dagger,
-                        primaryIsbn10 = bookDto.primaryIsbn10,
-                        publisher = bookDto.publisher,
-                        description = bookDto.description,
-                        price = bookDto.price,
-                        title = bookDto.title,
-                        author = bookDto.author,
-                        contributor = bookDto.contributor,
-                        contributorNote = bookDto.contributorNote,
-                        bookImage = bookDto.bookImage,
-                        amazonProductUrl = bookDto.amazonProductUrl,
-                        ageGroup = bookDto.ageGroup,
-                        bookReviewLink = bookDto.bookReviewLink,
-                        firstChapterLink = bookDto.firstChapterLink,
-                        sundayReviewLink = bookDto.sundayReviewLink,
-                        articleChapterLink = bookDto.articleChapterLink,
+                        bestsellersDate = bookListResultDto.bestsellersDate,
+                        publishedDate = bookListResultDto.publishedDate,
+                        displayName = bookListResultDto.displayName,
+                        normalListEndsAt = bookListResultDto.normalListEndsAt,
+                        updated = bookListResultDto.updated,
                     )
+
+                    val bookEntities = bookListResponseDto.results.books.map { bookDto ->
+                        BookEntity(
+                            primaryIsbn13 = bookDto.primaryIsbn13,
+                            listName = bookListResultDto.listName,
+                            rank = bookDto.rank,
+                            rankLastWeek = bookDto.rankLastWeek,
+                            weeksOnList = bookDto.weeksOnList,
+                            asterisk = bookDto.asterisk,
+                            dagger = bookDto.dagger,
+                            primaryIsbn10 = bookDto.primaryIsbn10,
+                            publisher = bookDto.publisher,
+                            description = bookDto.description,
+                            price = bookDto.price,
+                            title = bookDto.title,
+                            author = bookDto.author,
+                            contributor = bookDto.contributor,
+                            contributorNote = bookDto.contributorNote,
+                            bookImage = bookDto.bookImage,
+                            amazonProductUrl = bookDto.amazonProductUrl,
+                            ageGroup = bookDto.ageGroup,
+                            bookReviewLink = bookDto.bookReviewLink,
+                            firstChapterLink = bookDto.firstChapterLink,
+                            sundayReviewLink = bookDto.sundayReviewLink,
+                            articleChapterLink = bookDto.articleChapterLink,
+                        )
+                    }
+
+                    ListWithBooks(bookListEntity, bookEntities)
+
                 }
-
-                ListWithBooks(bookListEntity, bookEntities)
-
-            }
-            .onSuccess { listWithBooks ->
-                localDataSource.deleteListWithBooks(listName)
-                localDataSource.insertListWithBooks(listWithBooks)
-                Timber.d("Successfully refreshed $listName list in Database")
-            }
-            .onFailure { error ->
-                Timber.e("Error refreshing $listName list in Database: ${error.message}")
-            }
+                .fold(
+                    onSuccess = { listWithBooks ->
+                        try {
+                            localDataSource.deleteListWithBooks(listName)
+                            localDataSource.insertListWithBooks(listWithBooks)
+                            Timber.d("Successfully refreshed $listName list in Database")
+                            Result.success(Unit)
+                        } catch (e: Exception) {
+                            Timber.e("Database error refreshing $listName list: ${e.message}")
+                            Result.failure(e)
+                        }
+                    },
+                    onFailure = { error ->
+                        Timber.e("Error refreshing $listName list in Database: ${error.message}")
+                        Result.failure(error)
+                    }
+                )
+        } catch (e: Exception) {
+            Timber.e("Error refreshing $listName list in Database: ${e.message}")
+            Result.failure(e)
+        }
     }
 
     override suspend fun getListWithBooks(listName: String): Flow<ListWithBooks?> {

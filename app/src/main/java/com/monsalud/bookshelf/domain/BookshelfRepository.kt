@@ -14,7 +14,7 @@ interface BookshelfRepository {
      * Refreshes the book list in the local database by fetching data from the API.
      * @param listName The name of the book list to refresh.
      */
-    suspend fun refreshBookListInDbFromApi(listName: String)
+    suspend fun refreshBookListInDbFromApi(listName: String) : Result<Unit>
 
     /**
      * Gets the book list with associated books from the local database.
