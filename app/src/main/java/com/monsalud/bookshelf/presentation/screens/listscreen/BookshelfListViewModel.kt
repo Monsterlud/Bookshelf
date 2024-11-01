@@ -19,7 +19,7 @@ class BookshelfListViewModel(
     private val _uiState = MutableStateFlow<BookListState>(BookListState.Loading)
     val uiState: StateFlow<BookListState> = _uiState.asStateFlow()
 
-    private val _showOnboarding = MutableStateFlow(true)
+    private val _showOnboarding = MutableStateFlow(false)
     val showOnboarding: StateFlow<Boolean> = _showOnboarding.asStateFlow()
 
     init {

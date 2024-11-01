@@ -54,6 +54,6 @@
     <string name="read_the_full_new_york_times_review">Read the full New York Times review</string>
     <string name="no_review_available_for_this_book">No review available for this book</string>
     <string name="buy_this_book_on_amazon">Buy this book on Amazon</string>
-    <string name="error_loading_review">Error loading review</string>
+    <string name="error_loading_review">Oops...there was an error getting a review for this book</string>
 
 </resources>
