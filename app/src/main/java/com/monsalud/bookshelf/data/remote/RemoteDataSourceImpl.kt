@@ -38,7 +38,6 @@ class RemoteDataSourceImpl(
                 HttpStatusCode.OK -> {
                     Result.success(response.body<BookListResponseDto>())
                 }
-
                 else -> {
                     val error = response.body<BookListErrorResponse>()
                     Result.failure(

@@ -10,13 +10,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -34,6 +38,8 @@ import com.monsalud.bookshelf.presentation.components.OnboardingDialog
 import com.monsalud.bookshelf.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfListScreen(
     listName: String,
@@ -42,21 +48,18 @@ fun BookshelfListScreen(
     val viewModel: BookshelfListViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val showOnboardingDialog by remember {
-        derivedStateOf {
-            when (val state = uiState) {
-                is BookListState.Success -> {
-                    !state.isLoadingPreferences && !state.userPreferences.hasSeenOnboardingDialog
-
-                }
-
-                else -> false
-            }
-        }
-    }
+    val showOnboardingDialog by viewModel.showOnboarding.collectAsStateWithLifecycle()
+    val pullToRefreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.setListName(listName)
+        viewModel.syncAndObserveBookList(listName)
+    }
+
+    LaunchedEffect(uiState) {
+        if (uiState is BookListState.Success) {
+            isRefreshing = false
+        }
     }
 
     Box(
@@ -65,13 +68,11 @@ fun BookshelfListScreen(
             .background(MaterialTheme.colorScheme.surface)
     ) {
         SwipeRefresh(
-            state = rememberSwipeRefreshState(
-                isRefreshing = uiState is BookListState.Success && (uiState as BookListState.Success).isLoading,
-            ),
+            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
             onRefresh = {
-                viewModel.setListName(listName)
-            }
-        ) {
+                isRefreshing = true
+                viewModel.syncAndObserveBookList(listName, true)
+            }) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -97,16 +98,6 @@ fun BookshelfListScreen(
                                 }
                             }
                         }
-                        if (state.isLoading) {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .testTag("loadingIndicator")
-                                        .padding(MaterialTheme.spacing.medium)
-                                        .size(80.dp)
-                                )
-                            }
-                        }
                     }
 
                     is BookListState.Loading -> {
@@ -119,6 +110,20 @@ fun BookshelfListScreen(
                                     .testTag("loadingIndicator")
                                     .padding(MaterialTheme.spacing.medium)
                                     .size(80.dp)
+                            )
+                        }
+                    }
+
+                    is BookListState.Refreshing -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .testTag("loadingIndicator")
+                                    .padding(MaterialTheme.spacing.medium)
+                                    .size(50.dp)
                             )
                         }
                     }
@@ -139,8 +144,6 @@ fun BookshelfListScreen(
                             )
                         }
                     }
-
-                    BookListState.Empty -> TODO()
                 }
                 if (showOnboardingDialog) {
                     OnboardingDialog(
@@ -153,6 +156,7 @@ fun BookshelfListScreen(
         }
     }
 }
+
 
 @Composable
 fun TitleSection(listName: String) {
@@ -176,7 +180,6 @@ fun TitleSection(listName: String) {
         )
     )
 }
-
 
 @Composable
 @Preview
